@@ -35,6 +35,7 @@
   border: 5px solid black;
   width: 21vw;
   margin-top: 1vh;
+  border-radius: 5px;
 }
 
 .task a {
@@ -54,6 +55,7 @@ header {
   display: flex;
   justify-content: center;
   align-items: center;
+  margin-bottom: 5vh;
 }
 
 header h1 {

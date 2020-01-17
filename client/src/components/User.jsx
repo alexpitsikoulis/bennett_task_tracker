@@ -70,6 +70,7 @@ export default class User extends Component {
           <button>Back to Users</button>
         </Link>
         <h1>{this.state.user.name}</h1>
+        <h3>Total Tasks: {this.state.tasks.length}</h3>
         <button onClick={this.handleToggleEdit}>
           {this.state.editUser ? "Back to User" : "Edit User"}
         </button>

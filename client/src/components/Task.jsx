@@ -53,8 +53,7 @@ export default class Task extends Component {
   };
 
   handleDelete = () => {
-    let toDelete = window.confirm("Are you sure you want to remove this task?");
-    if (toDelete === true) {
+    if (window.confirm("Are you sure you want to remove this task?")) {
       axios
         .delete(
           `/api/users/${this.state.task.userId}/tasks/${this.state.task._id}`
@@ -67,8 +66,12 @@ export default class Task extends Component {
 
   getTaskDateTime = () => {
     const taskDT = new Date(this.state.task.dateTimeStarted);
-    return `${taskDT.getMonth() +
-      1}/${taskDT.getDate()}/${taskDT.getFullYear()} at ${taskDT.getHours()}:${taskDT.getMinutes()}`;
+    return taskDT.getHours() > 12
+      ? `${taskDT.getMonth() +
+          1}/${taskDT.getDate()}/${taskDT.getFullYear()} at ${taskDT.getHours() -
+          12}:${taskDT.getMinutes()} PM`
+      : `${taskDT.getMonth() +
+          1}/${taskDT.getDate()}/${taskDT.getFullYear()} at ${taskDT.getHours()}:${taskDT.getMinutes()} AM`;
   };
 
   render() {
