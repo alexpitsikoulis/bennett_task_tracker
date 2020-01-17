@@ -5,9 +5,9 @@ export default class Header extends Component {
   render() {
     return (
       <header>
-        <h1>
-          <Link to="/">Bennett Task Tracker</Link>
-        </h1>
+        <Link to="/" style={{ textDecoration: "none" }}>
+          <h1>Bennett Task Tracker</h1>
+        </Link>
       </header>
     );
   }
