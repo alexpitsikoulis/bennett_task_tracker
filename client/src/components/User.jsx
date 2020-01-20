@@ -86,15 +86,6 @@ export default class User extends Component {
                   onChange={this.handleChange}
                 />
               </div>
-              <div>
-                <label htmlFor="image">Image URL: </label>
-                <input
-                  type="text"
-                  name="image"
-                  value={this.state.user.image}
-                  onChange={this.handleChange}
-                />
-              </div>
               <input type="submit" value="Submit" />
             </form>
           </div>
