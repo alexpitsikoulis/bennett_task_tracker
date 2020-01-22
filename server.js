@@ -91,6 +91,31 @@ app.post("/send/updatedTask", (req, res, next) => {
   });
 });
 
+app.post("/send/welcome", (req, res, next) => {
+  var name = req.body.name;
+  var email = req.body.email;
+  var message = req.body.message;
+
+  var mail = {
+    from: "Bennett Task Bot",
+    to: email,
+    subject: `Welcome To The Bennett Task Tracker App`,
+    text: message
+  };
+
+  transporter.sendMail(mail, (err, data) => {
+    if (err) {
+      res.json({
+        msg: "fail"
+      });
+    } else {
+      res.json({
+        msg: "success"
+      });
+    }
+  });
+});
+
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
   console.log(`App is listening on PORT ${PORT}`);
