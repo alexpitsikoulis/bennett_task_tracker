@@ -82,6 +82,7 @@ export default class User extends Component {
                 <input
                   type="text"
                   name="name"
+                  required
                   value={this.state.user.name}
                   onChange={this.handleChange}
                 />
@@ -91,6 +92,7 @@ export default class User extends Component {
                 <input
                   type="email"
                   name="email"
+                  required
                   value={this.state.user.email}
                   onChange={this.handleChange}
                 />

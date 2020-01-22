@@ -104,6 +104,7 @@ export default class Task extends Component {
               <input
                 type="text"
                 name="title"
+                required
                 value={this.state.task.title}
                 onChange={this.handleChange}
               />

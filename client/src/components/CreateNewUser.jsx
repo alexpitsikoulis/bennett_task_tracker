@@ -50,6 +50,7 @@ export default class CreateNewUser extends Component {
             <input
               type="text"
               name="name"
+              required
               value={this.state.newUser.name}
               onChange={this.handleChange}
             />
@@ -59,6 +60,7 @@ export default class CreateNewUser extends Component {
             <input
               type="email"
               name="email"
+              required
               value={this.state.newUser.email}
               onChange={this.handleChange}
             />

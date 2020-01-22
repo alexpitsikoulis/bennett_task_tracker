@@ -78,6 +78,7 @@ export default class CreateNewTask extends Component {
             <input
               type="text"
               name="title"
+              required
               value={this.state.newTask.title}
               onChange={this.handleChange}
             />
