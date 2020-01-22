@@ -86,6 +86,15 @@ export default class User extends Component {
                   onChange={this.handleChange}
                 />
               </div>
+              <div>
+                <label htmlFor="email">Email: </label>
+                <input
+                  type="email"
+                  name="email"
+                  value={this.state.user.email}
+                  onChange={this.handleChange}
+                />
+              </div>
               <input type="submit" value="Submit" />
             </form>
           </div>
