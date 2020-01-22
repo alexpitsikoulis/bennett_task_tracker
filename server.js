@@ -41,7 +41,7 @@ transporter.verify((error, success) => {
   }
 });
 
-app.post("/api/send", (req, res, next) => {
+app.post("/send/newTask", (req, res, next) => {
   var name = req.body.name;
   var email = req.body.email;
   var message = req.body.message;
@@ -50,6 +50,31 @@ app.post("/api/send", (req, res, next) => {
     from: "Bennett Task Bot",
     to: email,
     subject: `You Have Been Assigned a New Task`,
+    text: message
+  };
+
+  transporter.sendMail(mail, (err, data) => {
+    if (err) {
+      res.json({
+        msg: "fail"
+      });
+    } else {
+      res.json({
+        msg: "success"
+      });
+    }
+  });
+});
+
+app.post("/send/updatedTask", (req, res, next) => {
+  var name = req.body.name;
+  var email = req.body.email;
+  var message = req.body.message;
+
+  var mail = {
+    from: "Bennett Task Bot",
+    to: email,
+    subject: `One Of Your Tasks Has Been Updated`,
     text: message
   };
 

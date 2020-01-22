@@ -45,11 +45,25 @@ export default class Task extends Component {
 
   handleSubmit = event => {
     event.preventDefault();
-    axios.put(
-      `/api/users/${this.state.task.userId}/tasks/${this.state.task._id}`,
-      this.state.task
-    );
-    this.setState({ editTask: false });
+
+    const name = this.state.user.name;
+    const email = this.state.user.email;
+    const message = `Your task ${this.state.task.title} has been updated\n\nDescription: ${this.state.task.description}\n\nThis is a ${this.state.task.priority} priority task`;
+
+    axios
+      .post("/send/updatedTask", { name, email, message })
+      .then(res => {
+        if (res.data.msg !== "success") {
+          alert("Email failed to send");
+        }
+      })
+      .then(() => {
+        axios.put(
+          `/api/users/${this.state.task.userId}/tasks/${this.state.task._id}`,
+          this.state.task
+        );
+        this.setState({ editTask: false });
+      });
   };
 
   handleDelete = () => {
