@@ -6,7 +6,7 @@ export default class CreateNewUser extends Component {
   state = {
     newUser: {
       name: "",
-      image: ""
+      email: ""
     },
     redirectToUsers: false
   };
@@ -37,6 +37,15 @@ export default class CreateNewUser extends Component {
               type="text"
               name="name"
               value={this.state.newUser.name}
+              onChange={this.handleChange}
+            />
+          </div>
+          <div>
+            <label htmlFor="email">Email: </label>
+            <input
+              type="email"
+              name="email"
+              value={this.state.newUser.email}
               onChange={this.handleChange}
             />
           </div>

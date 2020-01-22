@@ -10,7 +10,18 @@ export default class CreateNewTask extends Component {
       estimatedHours: 0,
       description: ""
     },
+    user: {},
     redirectToUser: false
+  };
+
+  componentDidMount() {
+    this.getUser();
+  }
+
+  getUser = () => {
+    axios.get(`/api/users/${this.props.match.params.userId}`).then(res => {
+      this.setState({ user: res.data });
+    });
   };
 
   handleChange = event => {
@@ -28,10 +39,27 @@ export default class CreateNewTask extends Component {
       description: this.state.newTask.description,
       userId: this.props.match.params.userId
     };
+
+    const name = this.state.user.name;
+    const email = this.state.user.email;
+    const message = `You have been assigned the task ${newTaskObject.title}\n\n${newTaskObject.description}\n\nThis is a ${newTaskObject.priority} priority task!`;
+
     axios
-      .post(`/api/users/${this.props.match.params.userId}/tasks`, newTaskObject)
+      .post("/api/send", { name, email, message })
+      .then(res => {
+        if (res.data.msg !== "success") {
+          alert("Email failed to send");
+        }
+      })
       .then(() => {
-        this.setState({ redirectToUser: true });
+        axios
+          .post(
+            `/api/users/${this.props.match.params.userId}/tasks`,
+            newTaskObject
+          )
+          .then(() => {
+            this.setState({ redirectToUser: true });
+          });
       });
   };
 
