@@ -19,9 +19,23 @@ export default class CreateNewUser extends Component {
 
   handleSubmit = event => {
     event.preventDefault();
-    axios.post("/api/users", this.state.newUser).then(() => {
-      this.setState({ redirectToUsers: true });
-    });
+
+    const name = this.state.newUser.name;
+    const email = this.state.newUser.email;
+    const message = `Hi ${name}! You have been added to the Bennett Task Tracker app. Click the link below to check it out!\nhttp://bennett-task-tracker.herokuapp.com/`;
+
+    axios
+      .post("/send/welcome", { name, email, message })
+      .then(res => {
+        if (res.data.msg !== "success") {
+          alert("Email failed to send");
+        }
+      })
+      .then(() => {
+        axios.post("/api/users", this.state.newUser).then(() => {
+          this.setState({ redirectToUsers: true });
+        });
+      });
   };
 
   render() {
