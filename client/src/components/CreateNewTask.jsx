@@ -42,10 +42,10 @@ export default class CreateNewTask extends Component {
 
     const name = this.state.user.name;
     const email = this.state.user.email;
-    const message = `You have been assigned the task ${newTaskObject.title}\n\n${newTaskObject.description}\n\nThis is a ${newTaskObject.priority} priority task!`;
+    const message = `You have been assigned the task ${newTaskObject.title}\n\nDescription: ${newTaskObject.description}\n\nThis is a ${newTaskObject.priority} priority task!`;
 
     axios
-      .post("/api/send", { name, email, message })
+      .post("/send/newTask", { name, email, message })
       .then(res => {
         if (res.data.msg !== "success") {
           alert("Email failed to send");
