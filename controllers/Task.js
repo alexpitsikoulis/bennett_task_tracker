@@ -27,6 +27,7 @@ taskRouter.get("/:taskId", (req, res) => {
 taskRouter.post("/", (req, res) => {
   req.body.userId = req.params.userId;
   req.body.dateTimeStarted = new Date();
+  req.body.status = "Not Started";
   taskApi
     .createTask(req.body)
     .then(data => {

@@ -50,20 +50,12 @@ export default class Task extends Component {
   };
 
   handleSubmit = event => {
-    event.preventDefault();
-
-    const name = this.state.user.name;
-    const email = this.state.user.email;
-    const message = `Your task ${this.state.task.title} has been updated\n\nDescription: ${this.state.task.description}\n\nThis is a ${this.state.task.priority} priority task`;
-
-    axios
-      .post("/send/updatedTask", { name, email, message })
-      .then(res => {
-        if (res.data.msg !== "success") {
-          alert("Email failed to send");
-        }
-      })
-      .then(() => {
+    if (this.state.task.status === "Finished") {
+      if (
+        window.confirm(
+          "Are you sure you want to mark this task as finished? This will remove it from your active tasks."
+        )
+      ) {
         const dueDate = new Date(`${this.getDueDate(true)}T17:00:00`);
         console.log(dueDate);
         const newTaskObject = {
@@ -73,6 +65,7 @@ export default class Task extends Component {
           estimatedHours: this.state.task.estimatedHours,
           description: this.state.task.description,
           userId: this.props.match.params.userId,
+          status: this.state.task.status,
           dueDate: dueDate
         };
         axios.put(
@@ -80,8 +73,41 @@ export default class Task extends Component {
           newTaskObject
         );
         this.setState({ editTask: false, dueDateChanged: false });
-        this.getTask();
-      });
+      }
+    } else {
+      event.preventDefault();
+
+      // const name = this.state.user.name;
+      // const email = this.state.user.email;
+      // const message = `Your task ${this.state.task.title} has been updated\n\nDescription: ${this.state.task.description}\n\nThis is a ${this.state.task.priority} priority task`;
+
+      // axios
+      //   .post("/send/updatedTask", { name, email, message })
+      //   .then(res => {
+      //     if (res.data.msg !== "success") {
+      //       alert("Email failed to send");
+      //     }
+      //   })
+      //   .then(() => {
+      const dueDate = new Date(`${this.getDueDate(true)}T17:00:00`);
+      console.log(dueDate);
+      const newTaskObject = {
+        _id: this.state.task._id,
+        title: this.state.task.title,
+        priority: this.state.task.priority,
+        estimatedHours: this.state.task.estimatedHours,
+        description: this.state.task.description,
+        userId: this.props.match.params.userId,
+        status: this.state.task.status,
+        dueDate: dueDate
+      };
+      axios.put(
+        `/api/users/${this.state.task.userId}/tasks/${this.state.task._id}`,
+        newTaskObject
+      );
+      this.setState({ editTask: false, dueDateChanged: false });
+      // });
+    }
   };
 
   handleDelete = () => {
@@ -175,6 +201,19 @@ export default class Task extends Component {
                 value={this.getDueDate(true)}
                 onChange={this.handleChange}
               />
+              <div>
+                <label htmlFor="status">Status: </label>
+                <select
+                  name="status"
+                  id="status"
+                  value={this.state.task.status}
+                  onChange={this.handleChange}
+                >
+                  <option value="Not Started">Not Started</option>
+                  <option value="Started">Started</option>
+                  <option value="Finished">Finished</option>
+                </select>
+              </div>
             </div>
             <div>
               <label htmlFor="description">Description: </label>
@@ -204,8 +243,9 @@ export default class Task extends Component {
             </h3>
             <h4>Date and Time Started: {this.getTaskDateTimeStarted()}</h4>
             <h4>Due Date: {this.getDueDate(false)}</h4>
+            <h4>Status: {this.state.task.status}</h4>
             <p>{this.state.task.description}</p>
-            <button onClick={this.handleDelete}>Completed</button>
+            <button onClick={this.handleDelete}>Delete Task</button>
           </div>
         )}
       </div>
