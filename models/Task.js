@@ -6,7 +6,8 @@ const TaskSchema = new mongoose.Schema({
   estimatedHours: Number,
   description: String,
   userId: mongoose.Types.ObjectId,
-  dateTimeStarted: Date
+  dateTimeStarted: Date,
+  dueDate: Date
 });
 
 const TaskCollection = mongoose.model("Task", TaskSchema);

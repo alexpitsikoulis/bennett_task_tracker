@@ -8,7 +8,8 @@ export default class CreateNewTask extends Component {
       title: "",
       priority: "Low",
       estimatedHours: 0,
-      description: ""
+      description: "",
+      dueDate: ""
     },
     user: {},
     redirectToUser: false
@@ -32,35 +33,35 @@ export default class CreateNewTask extends Component {
 
   handleSubmit = event => {
     event.preventDefault();
+    const dueDate = new Date(`${this.state.newTask.dueDate}T17:00:00`);
+    console.log(dueDate);
     const newTaskObject = {
       title: this.state.newTask.title,
       priority: this.state.newTask.priority,
       estimatedHours: this.state.newTask.estimatedHours,
       description: this.state.newTask.description,
-      userId: this.props.match.params.userId
+      userId: this.props.match.params.userId,
+      dueDate: dueDate
     };
 
-    const name = this.state.user.name;
-    const email = this.state.user.email;
-    const message = `You have been assigned the task ${newTaskObject.title}\n\nDescription: ${newTaskObject.description}\n\nThis is a ${newTaskObject.priority} priority task!`;
+    // const name = this.state.user.name;
+    // const email = this.state.user.email;
+    // const message = `You have been assigned the task ${newTaskObject.title}\n\nDescription: ${newTaskObject.description}\n\nThis is a ${newTaskObject.priority} priority task!`;
 
+    // axios
+    //   .post("/send/newTask", { name, email, message })
+    //   .then(res => {
+    //     if (res.data.msg !== "success") {
+    //       alert("Email failed to send");
+    //     }
+    //   })
+    //   .then(() => {
     axios
-      .post("/send/newTask", { name, email, message })
-      .then(res => {
-        if (res.data.msg !== "success") {
-          alert("Email failed to send");
-        }
-      })
+      .post(`/api/users/${this.props.match.params.userId}/tasks`, newTaskObject)
       .then(() => {
-        axios
-          .post(
-            `/api/users/${this.props.match.params.userId}/tasks`,
-            newTaskObject
-          )
-          .then(() => {
-            this.setState({ redirectToUser: true });
-          });
+        this.setState({ redirectToUser: true });
       });
+    // });
   };
 
   render() {
@@ -103,6 +104,15 @@ export default class CreateNewTask extends Component {
               type="number"
               name="estimatedHours"
               value={this.state.newTask.estimatedHours}
+              onChange={this.handleChange}
+            />
+          </div>
+          <div>
+            <label htmlFor="dueDate">Due Date: </label>
+            <input
+              type="date"
+              name="dueDate"
+              id="dueDate"
               onChange={this.handleChange}
             />
           </div>
