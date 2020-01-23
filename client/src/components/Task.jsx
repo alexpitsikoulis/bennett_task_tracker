@@ -8,7 +8,8 @@ export default class Task extends Component {
     errors: [],
     editTask: false,
     user: {},
-    redirectToUser: false
+    redirectToUser: false,
+    dueDateChanged: false
   };
 
   componentDidMount() {
@@ -39,8 +40,13 @@ export default class Task extends Component {
 
   handleChange = event => {
     const copiedTask = { ...this.state.task };
-    copiedTask[event.target.name] = event.target.value;
-    this.setState({ task: copiedTask });
+    if (event.target.name === "dueDate") {
+      copiedTask.dueDate = new Date(`${event.target.value}T17:00:00`);
+      this.setState({ task: copiedTask, dueDateChanged: true });
+    } else {
+      copiedTask[event.target.name] = event.target.value;
+      this.setState({ task: copiedTask });
+    }
   };
 
   handleSubmit = event => {
@@ -58,11 +64,23 @@ export default class Task extends Component {
         }
       })
       .then(() => {
+        const dueDate = new Date(`${this.getDueDate(true)}T17:00:00`);
+        console.log(dueDate);
+        const newTaskObject = {
+          _id: this.state.task._id,
+          title: this.state.task.title,
+          priority: this.state.task.priority,
+          estimatedHours: this.state.task.estimatedHours,
+          description: this.state.task.description,
+          userId: this.props.match.params.userId,
+          dueDate: dueDate
+        };
         axios.put(
           `/api/users/${this.state.task.userId}/tasks/${this.state.task._id}`,
-          this.state.task
+          newTaskObject
         );
-        this.setState({ editTask: false });
+        this.setState({ editTask: false, dueDateChanged: false });
+        this.getTask();
       });
   };
 
@@ -78,7 +96,7 @@ export default class Task extends Component {
     }
   };
 
-  getTaskDateTime = () => {
+  getTaskDateTimeStarted = () => {
     const taskDT = new Date(this.state.task.dateTimeStarted);
     return taskDT.getHours() > 12
       ? `${taskDT.getMonth() +
@@ -86,6 +104,20 @@ export default class Task extends Component {
           12}:${taskDT.getMinutes()} PM`
       : `${taskDT.getMonth() +
           1}/${taskDT.getDate()}/${taskDT.getFullYear()} at ${taskDT.getHours()}:${taskDT.getMinutes()} AM`;
+  };
+
+  getDueDate = forForm => {
+    const dueDate = new Date(this.state.task.dueDate);
+    const month =
+      dueDate.getMonth() + 1 < 10
+        ? `0${dueDate.getMonth() + 1}`
+        : dueDate.getMonth() + 1;
+    const date =
+      dueDate.getDate() < 10 ? `0${dueDate.getDate()}` : dueDate.getDate();
+    return forForm
+      ? `${dueDate.getFullYear()}-${month}-${date}`
+      : `${dueDate.getMonth() +
+          1}/${dueDate.getDate()}/${dueDate.getFullYear()}`;
   };
 
   render() {
@@ -135,6 +167,16 @@ export default class Task extends Component {
               />
             </div>
             <div>
+              <label htmlFor="dueDate">Due Date: </label>
+              <input
+                type="date"
+                name="dueDate"
+                id="dueDate"
+                value={this.getDueDate(true)}
+                onChange={this.handleChange}
+              />
+            </div>
+            <div>
               <label htmlFor="description">Description: </label>
               <textarea
                 name="description"
@@ -160,7 +202,8 @@ export default class Task extends Component {
             <h3>
               Estimated Hours To Complete: {this.state.task.estimatedHours}
             </h3>
-            <h4>Date and Time Started: {this.getTaskDateTime()}</h4>
+            <h4>Date and Time Started: {this.getTaskDateTimeStarted()}</h4>
+            <h4>Due Date: {this.getDueDate(false)}</h4>
             <p>{this.state.task.description}</p>
             <button onClick={this.handleDelete}>Completed</button>
           </div>
