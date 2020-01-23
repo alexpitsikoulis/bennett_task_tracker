@@ -9,7 +9,8 @@ export default class User extends Component {
     tasks: [],
     errors: [],
     editUser: false,
-    redirectToHome: false
+    redirectToHome: false,
+    showFinishedTasks: false
   };
 
   componentDidMount() {
@@ -40,6 +41,12 @@ export default class User extends Component {
     });
   };
 
+  handleToggleShowFinishedTasks = () => {
+    this.setState(state => {
+      return { showFinishedTasks: !state.showFinishedTasks };
+    });
+  };
+
   handleChange = event => {
     const copiedUser = { ...this.state.user };
     copiedUser[event.target.name] = event.target.value;
@@ -64,15 +71,34 @@ export default class User extends Component {
     if (this.state.redirectToHome) {
       return <Redirect to="/" />;
     }
+
+    const openTasks = this.state.tasks.filter(task => {
+      return task.status !== "Finished";
+    });
+
+    const finishedTasks = this.state.tasks.filter(task => {
+      return task.status === "Finished";
+    });
+
     return (
       <div>
         <Link to="/">
           <button>Back to Users</button>
         </Link>
         <h1>{this.state.user.name}</h1>
-        <h3>Total Tasks: {this.state.tasks.length}</h3>
         <button onClick={this.handleToggleEdit}>
           {this.state.editUser ? "Back to User" : "Edit User"}
+        </button>
+        <br />
+        <h3>
+          {this.state.showFinishedTasks
+            ? `Total Finished Tasks: ${finishedTasks.length}`
+            : `Total Open Tasks: ${openTasks.length}`}
+        </h3>
+        <button onClick={this.handleToggleShowFinishedTasks}>
+          {this.state.showFinishedTasks
+            ? "Show Open Tasks"
+            : "Show Finished Tasks"}
         </button>
         {this.state.editUser ? (
           <div>
@@ -101,7 +127,10 @@ export default class User extends Component {
             </form>
           </div>
         ) : (
-          <Tasks tasks={this.state.tasks} userId={this.state.user._id} />
+          <Tasks
+            tasks={this.state.showFinishedTasks ? finishedTasks : openTasks}
+            userId={this.state.user._id}
+          />
         )}
         <button onClick={this.handleDeleteUser} style={{ marginTop: "5vh" }}>
           Delete User
