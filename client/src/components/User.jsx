@@ -130,6 +130,7 @@ export default class User extends Component {
           <Tasks
             tasks={this.state.showFinishedTasks ? finishedTasks : openTasks}
             userId={this.state.user._id}
+            openOrFinished={this.state.showFinishedTasks ? "Finished" : "Open"}
           />
         )}
         <button onClick={this.handleDeleteUser} style={{ marginTop: "5vh" }}>

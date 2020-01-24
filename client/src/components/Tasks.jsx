@@ -68,7 +68,7 @@ export default class Tasks extends Component {
     // });
     return (
       <div>
-        <h2>Tasks</h2>
+        <h1>{this.props.openOrFinished} Tasks</h1>
         <Link to={`/${this.props.userId}/newtask`}>
           <button>Create New Task</button>
         </Link>
