@@ -9,35 +9,14 @@ const UserSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  image: String
+  password: {
+    type: String,
+    required: true
+  },
+  date: {
+    type: Date,
+    default: Date.now
+  }
 });
 
-const UserCollection = mongoose.model("User", UserSchema);
-
-function getAllUsers() {
-  return UserCollection.find();
-}
-
-function getUserById(userId) {
-  return UserCollection.findById(userId);
-}
-
-function createUser(userObject) {
-  return UserCollection.create(userObject);
-}
-
-function editUser(userId, userObject) {
-  return UserCollection.findByIdAndUpdate(userId, userObject, { new: true });
-}
-
-function deleteUser(userId) {
-  return UserCollection.findByIdAndDelete(userId);
-}
-
-module.exports = {
-  getAllUsers,
-  getUserById,
-  createUser,
-  editUser,
-  deleteUser
-};
+module.exports = User = mongoose.model("users", UserSchema);

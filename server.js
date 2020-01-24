@@ -1,8 +1,11 @@
 const express = require("express");
+const mongoose = require("mongoose");
+const bodyParser = require("body-parser");
 const app = express();
-const { userRouter } = require("./controllers/User");
+const userRouter = require("./controllers/User");
 const { taskRouter } = require("./controllers/Task");
 const nodemailer = require("nodemailer");
+const passport = require("passport");
 const creds = require("./config/nodemailerConfig");
 
 app.use(function(req, res, next) {
@@ -14,14 +17,22 @@ app.use(function(req, res, next) {
   next();
 });
 
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
+app.use(
+  bodyParser.urlencoded({
+    extended: false
+  })
+);
+app.use(bodyParser.json());
+// app.use(express.urlencoded({ extended: true }));
+// app.use(express.json());
 app.use(express.static(`${__dirname}/client/build`));
-app.use("/api/users", userRouter);
-app.use("/api/users/:userId/tasks", taskRouter);
 app.get("/*", (req, res) => {
   res.sendFile(`${__dirname}/client/build/index.html`);
 });
+app.use(passport.initialize());
+require("./config/passport")(passport);
+app.use("/api/users", userRouter);
+app.use("/api/users/:userId/tasks", taskRouter);
 
 var transport = {
   host: "smtp.gmail.com",
