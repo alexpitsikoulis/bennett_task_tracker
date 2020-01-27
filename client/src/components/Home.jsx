@@ -1,8 +1,11 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
+import Login from "./Login";
 
-export default class Home extends Component {
+class Home extends Component {
   state = {
     users: [],
     errors: []
@@ -53,3 +56,13 @@ export default class Home extends Component {
     );
   }
 }
+
+Home.propTypes = {
+  user: PropTypes.object.isRequired
+};
+
+const mapStateToProps = state => ({
+  auth: state.auth
+});
+
+export default connect(mapStateToProps)(Home);
