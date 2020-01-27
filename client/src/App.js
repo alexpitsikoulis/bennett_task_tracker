@@ -5,7 +5,6 @@ import "./App.css";
 import User from "./components/User";
 import Header from "./components/Header";
 import Task from "./components/Task";
-import CreateNewUser from "./components/CreateNewUser";
 import CreateNewTask from "./components/CreateNewTask";
 import Login from "./components/Login";
 import Register from "./components/Register";
@@ -40,7 +39,6 @@ export default class App extends Component {
               <Route exact path="/register" component={Register} />
               <Route exact path="/login" component={Login} />
               <PrivateRoute exact path="/" component={Home} />
-              {/* <Route path="/newUser" component={CreateNewUser} /> */}
               <PrivateRoute path="/:userId/newTask" component={CreateNewTask} />
               <PrivateRoute path="/:userId/tasks/:taskId" component={Task} />
               <PrivateRoute path="/:userId" component={User} />

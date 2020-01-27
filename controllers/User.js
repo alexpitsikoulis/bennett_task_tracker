@@ -8,6 +8,12 @@ const keys = require("../config/keys");
 const validateRegisterInput = require("../validation/register");
 const validateLoginInput = require("../validation/login");
 
+userRouter.delete("/all", (req, res) => {
+  User.deleteMany().then(users => {
+    res.json(users);
+  });
+});
+
 userRouter.get("/", (req, res) => {
   User.find()
     .then(users => {
