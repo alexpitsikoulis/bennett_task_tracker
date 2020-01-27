@@ -1,67 +1,6 @@
-// const express = require("express");
-// const userApi = require("../models/User");
-// const userRouter = express.Router();
-
-// userRouter.get("/", (req, res) => {
-//   userApi
-//     .getAllUsers()
-//     .then(data => {
-//       res.json(data);
-//     })
-//     .catch(err => {
-//       res.json(err);
-//     });
-// });
-
-// userRouter.get("/:userId", (req, res) => {
-//   userApi
-//     .getUserById(req.params.userId)
-//     .then(data => {
-//       res.json(data);
-//     })
-//     .catch(err => {
-//       res.json(err);
-//     });
-// });
-
-// userRouter.post("/", (req, res) => {
-//   userApi
-//     .createUser(req.body)
-//     .then(data => {
-//       res.json(data);
-//     })
-//     .catch(err => {
-//       res.json(err);
-//     });
-// });
-
-// userRouter.put("/:userId", (req, res) => {
-//   userApi
-//     .editUser(req.params.userId, req.body)
-//     .then(data => {
-//       res.json(data);
-//     })
-//     .catch(err => {
-//       res.json(err);
-//     });
-// });
-
-// userRouter.delete("/:userId", (req, res) => {
-//   userApi
-//     .deleteUser(req.params.userId)
-//     .then(data => {
-//       res.json(data);
-//     })
-//     .catch(err => {
-//       res.json(err);
-//     });
-// });
-
-// module.exports = {
-//   userRouter
-// };
 const express = require("express");
-const router = express.Router();
+const user = require("../models/User");
+const userRouter = express.Router();
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const keys = require("../config/keys");
@@ -69,10 +8,47 @@ const keys = require("../config/keys");
 const validateRegisterInput = require("../validation/register");
 const validateLoginInput = require("../validation/login");
 
-const User = require("../models/User");
+userRouter.get("/", (req, res) => {
+  User.find()
+    .then(users => {
+      res.json(users);
+    })
+    .catch(err => {
+      res.json(err);
+    });
+});
 
-router.post("/register", (req, res) => {
-  console.log(req.body);
+userRouter.get("/:userId", (req, res) => {
+  User.findById(req.params.userId)
+    .then(user => {
+      res.json(user);
+    })
+    .catch(err => {
+      res.json(err);
+    });
+});
+
+userRouter.put("/:userId", (req, res) => {
+  User.findByIdAndEdit(req.params.userId, req.body)
+    .then(user => {
+      res.json(user);
+    })
+    .catch(err => {
+      res.json(err);
+    });
+});
+
+userRouter.delete("/:userId", (req, res) => {
+  User.findByIdAndDelete(req.params.userId)
+    .then(user => {
+      res.json(user);
+    })
+    .catch(err => {
+      res.json(err);
+    });
+});
+
+userRouter.post("/register", (req, res) => {
   const { errors, isValid } = validateRegisterInput(req.body);
 
   if (!isValid) {
@@ -105,8 +81,10 @@ router.post("/register", (req, res) => {
   });
 });
 
-router.post("/login", (req, res) => {
+userRouter.post("/login", (req, res) => {
   const { errors, isValid } = validateLoginInput(req.body);
+
+  console.log(req.body);
 
   if (!isValid) {
     return res.status(400).json(errors);
@@ -147,4 +125,4 @@ router.post("/login", (req, res) => {
   });
 });
 
-module.exports = router;
+module.exports = { userRouter };

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Component } from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import Home from "./components/Home";
 import "./App.css";
@@ -7,22 +7,47 @@ import Header from "./components/Header";
 import Task from "./components/Task";
 import CreateNewUser from "./components/CreateNewUser";
 import CreateNewTask from "./components/CreateNewTask";
+import Login from "./components/Login";
+import Register from "./components/Register";
+import { Provider } from "react-redux";
+import store from "./store";
+import jwt_decode from "jwt-decode";
+import setAuthToken from "./utils/setAuthToken";
+import { setCurrentUser, logoutUser } from "./actions/authActions";
+import PrivateRoute from "./components/private-route/PrivateRoute";
 
-function App() {
-	return (
-		<div className='App'>
-			<Router>
-				<Header />
-				<Switch>
-					<Route exact path='/' component={Home} />
-					<Route path='/newUser' component={CreateNewUser} />
-					<Route path='/:userId/newTask' component={CreateNewTask} />
-					<Route path='/:userId/tasks/:taskId' component={Task} />
-					<Route path='/:userId' component={User} />
-				</Switch>
-			</Router>
-		</div>
-	);
+if (localStorage.jwtToken) {
+  const token = localStorage.jwtToken;
+  setAuthToken(token);
+  const decoded = jwt_decode(token);
+  store.dispatch(setCurrentUser(decoded));
+
+  const currentTime = Date.now() / 1000;
+  if (decoded.exp < currentTime) {
+    store.dispatch(logoutUser());
+    window.location.href = "/login";
+  }
 }
 
-export default App;
+export default class App extends Component {
+  render() {
+    return (
+      <Provider store={store}>
+        <Router>
+          <div className="App">
+            <Header />
+            <Switch>
+              <Route exact path="/register" component={Register} />
+              <Route exact path="/login" component={Login} />
+              <PrivateRoute exact path="/" component={Home} />
+              {/* <Route path="/newUser" component={CreateNewUser} /> */}
+              <PrivateRoute path="/:userId/newTask" component={CreateNewTask} />
+              <PrivateRoute path="/:userId/tasks/:taskId" component={Task} />
+              <PrivateRoute path="/:userId" component={User} />
+            </Switch>
+          </div>
+        </Router>
+      </Provider>
+    );
+  }
+}
