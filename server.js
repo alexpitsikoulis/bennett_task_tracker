@@ -101,6 +101,31 @@ app.post("/send/updatedTask", (req, res, next) => {
   });
 });
 
+app.post("/send/completedTask", (req, res, next) => {
+  var name = req.body.name;
+  var email = req.body.email;
+  var message = req.body.message;
+
+  var mail = {
+    from: "Bennett Task Bot",
+    to: email,
+    subject: `A Task You Assigned Has Been Completed`,
+    text: message
+  };
+
+  transporter.sendMail(mail, (err, data) => {
+    if (err) {
+      res.json({
+        msg: "fail"
+      });
+    } else {
+      res.json({
+        msg: "success"
+      });
+    }
+  });
+});
+
 app.post("/send/welcome", (req, res, next) => {
   var name = req.body.name;
   var email = req.body.email;

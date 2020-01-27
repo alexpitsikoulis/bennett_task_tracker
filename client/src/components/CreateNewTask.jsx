@@ -1,8 +1,10 @@
 import React, { Component } from "react";
 import { Link, Redirect } from "react-router-dom";
 import axios from "axios";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
 
-export default class CreateNewTask extends Component {
+class CreateNewTask extends Component {
   state = {
     newTask: {
       title: "",
@@ -34,19 +36,20 @@ export default class CreateNewTask extends Component {
   handleSubmit = event => {
     event.preventDefault();
     const dueDate = new Date(`${this.state.newTask.dueDate}T17:00:00`);
-    console.log(dueDate);
     const newTaskObject = {
       title: this.state.newTask.title,
       priority: this.state.newTask.priority,
       estimatedHours: this.state.newTask.estimatedHours,
       description: this.state.newTask.description,
       userId: this.props.match.params.userId,
-      dueDate: dueDate
+      dueDate: dueDate,
+      assignedBy: this.props.auth.user.name,
+      assignedById: this.props.auth.user.id
     };
 
     const name = this.state.user.name;
     const email = this.state.user.email;
-    const message = `You have been assigned the task ${newTaskObject.title}\n\nDescription: ${newTaskObject.description}\n\nThis is a ${newTaskObject.priority} priority task!`;
+    const message = `${newTaskObject.assignedBy} assigned you the task ${newTaskObject.title}\n\nDescription: ${newTaskObject.description}\n\nThis is a ${newTaskObject.priority} priority task!`;
 
     axios
       .post("/send/newTask", { name, email, message })
@@ -135,3 +138,13 @@ export default class CreateNewTask extends Component {
     );
   }
 }
+
+CreateNewTask.propTypes = {
+  auth: PropTypes.object.isRequired
+};
+
+const mapStateToProps = state => ({
+  auth: state.auth
+});
+
+export default connect(mapStateToProps)(CreateNewTask);

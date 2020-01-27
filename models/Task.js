@@ -8,7 +8,9 @@ const TaskSchema = new mongoose.Schema({
   status: String,
   userId: mongoose.Types.ObjectId,
   dateTimeStarted: Date,
-  dueDate: Date
+  dueDate: Date,
+  assignedBy: String,
+  assignedById: mongoose.Types.ObjectId
 });
 
 const TaskCollection = mongoose.model("Task", TaskSchema);

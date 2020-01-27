@@ -5,6 +5,7 @@ import axios from "axios";
 export default class Task extends Component {
   state = {
     task: {},
+    userAssignedBy: {},
     errors: [],
     editTask: false,
     user: {},
@@ -16,6 +17,8 @@ export default class Task extends Component {
     this.getTask();
   }
 
+  componentWillReceiveProps(nextProps) {}
+
   getTask = () => {
     axios
       .get(
@@ -23,6 +26,14 @@ export default class Task extends Component {
       )
       .then(res => {
         this.setState({ task: res.data });
+        axios
+          .get(`/api/users/${res.data.assignedById}`)
+          .then(res => {
+            this.setState({ userAssignedBy: res.data });
+          })
+          .catch(err => {
+            this.setState({ errors: err.data });
+          });
         axios.get(`/api/users/${this.state.task.userId}`).then(res2 => {
           this.setState({ user: res2.data });
         });
@@ -50,6 +61,7 @@ export default class Task extends Component {
   };
 
   handleSubmit = event => {
+    event.preventDefault();
     if (this.state.task.status === "Finished") {
       if (
         window.confirm(
@@ -57,7 +69,6 @@ export default class Task extends Component {
         )
       ) {
         const dueDate = new Date(`${this.getDueDate(true)}T17:00:00`);
-        console.log(dueDate);
         const newTaskObject = {
           _id: this.state.task._id,
           title: this.state.task.title,
@@ -66,17 +77,32 @@ export default class Task extends Component {
           description: this.state.task.description,
           userId: this.props.match.params.userId,
           status: this.state.task.status,
-          dueDate: dueDate
+          dueDate: dueDate,
+          assignedBy: this.state.task.assignedBy,
+          assignedById: this.state.task.assignedById
         };
-        axios.put(
-          `/api/users/${this.state.task.userId}/tasks/${this.state.task._id}`,
-          newTaskObject
-        );
+
+        const name = this.state.user.name;
+        const email = this.state.userAssignedBy.email;
+        const message = `${this.state.user.name} has completed the task ${this.state.task.title}.`;
+
+        axios
+          .post("/send/completedTask", { name, email, message })
+          .then(res => {
+            if (res.data.msg !== "success") {
+              alert("Email failed to send");
+            }
+          })
+          .then(() => {
+            axios.put(
+              `/api/users/${this.state.task.userId}/tasks/${this.state.task._id}`,
+              newTaskObject
+            );
+          });
+
         this.setState({ editTask: false, dueDateChanged: false });
       }
     } else {
-      event.preventDefault();
-
       const name = this.state.user.name;
       const email = this.state.user.email;
       const message = `Your task ${this.state.task.title} has been updated\n\nDescription: ${this.state.task.description}\n\nThis is a ${this.state.task.priority} priority task`;

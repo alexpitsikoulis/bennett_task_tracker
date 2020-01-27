@@ -48,9 +48,6 @@ class Home extends Component {
     return (
       <div>
         <h1>All Users</h1>
-        <Link to="/newuser">
-          <button>Create New User</button>
-        </Link>
         {userList}
       </div>
     );
