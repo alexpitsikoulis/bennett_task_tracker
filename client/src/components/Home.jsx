@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import Login from "./Login";
 
 class Home extends Component {
   state = {
@@ -38,7 +37,7 @@ class Home extends Component {
       })
       .map(user => {
         return (
-          <div name={user.name}>
+          <div name={user.name} key={user._id}>
             <h2>
               <Link to={`/${user._id}`}>{user.name}</Link>
             </h2>
@@ -55,7 +54,7 @@ class Home extends Component {
 }
 
 Home.propTypes = {
-  user: PropTypes.object.isRequired
+  auth: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => ({

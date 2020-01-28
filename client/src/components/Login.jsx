@@ -1,10 +1,8 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import axios from "axios";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { loginUser } from "../actions/authActions";
-import classnames from "classnames";
 
 class Login extends Component {
   state = {
@@ -58,6 +56,7 @@ class Login extends Component {
               value={this.state.userLoggingIn.email}
               onChange={this.handleChange}
             />
+            <span className="red-text">{errors.emailnotfound}</span>
           </div>
           <div>
             <label htmlFor="password">Password: </label>
@@ -68,6 +67,7 @@ class Login extends Component {
               value={this.state.userLoggingIn.password}
               onChange={this.handleChange}
             />
+            <span className="red-text">{errors.passwordincorrect}</span>
           </div>
           <input type="submit" value="Log In" />
         </form>

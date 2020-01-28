@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import axios from "axios";
 
 export default class Tasks extends Component {
   priorityFilterAndMap = p => {
@@ -27,6 +26,7 @@ export default class Tasks extends Component {
           <Link
             to={`/${task.userId}/tasks/${task._id}`}
             style={{ color: "black", textDecoration: "none" }}
+            key={task._id}
           >
             <div className="task" style={{ backgroundColor: priorityColor }}>
               <h3>{task.title}</h3>
