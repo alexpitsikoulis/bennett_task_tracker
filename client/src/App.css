@@ -84,6 +84,11 @@ header h1 {
   margin-left: 5px;
 }
 
+.red-text {
+  font-size: 0.8em;
+  color: red;
+}
+
 a:visited {
   color: blue;
 }

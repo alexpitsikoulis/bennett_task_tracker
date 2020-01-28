@@ -120,7 +120,6 @@ class Task extends Component {
         })
         .then(() => {
           const dueDate = new Date(`${this.getDueDate(true)}T17:00:00`);
-          console.log(dueDate);
           const newTaskObject = {
             _id: this.state.task._id,
             title: this.state.task.title,

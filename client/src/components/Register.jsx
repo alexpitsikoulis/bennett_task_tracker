@@ -4,7 +4,6 @@ import PropTypes from "prop-types";
 import axios from "axios";
 import { connect } from "react-redux";
 import { registerUser } from "../actions/authActions";
-import classnames from "classnames";
 
 class Register extends Component {
   state = {
@@ -32,15 +31,6 @@ class Register extends Component {
   handleSubmit = event => {
     event.preventDefault();
 
-    const name = this.state.newUser.name;
-    const email = this.state.newUser.email;
-    const message = `Welcome ${name},\nYou have been registered with the Bennett Task Tracker App! Check it out at http://bennett-task-tracker.herokuapp.com/`;
-
-    axios.post("/send/welcome", { name, email, message }).then(res => {
-      if (res.data.msg !== "success") {
-        alert("Email failed to send");
-      }
-    });
     const newUser = {
       name: this.state.newUser.name,
       email: this.state.newUser.email,
@@ -48,6 +38,18 @@ class Register extends Component {
       password2: this.state.newUser.password2
     };
     this.props.registerUser(newUser, this.props.history);
+
+    if (Object.keys(this.props.errors).length) {
+      const name = this.state.newUser.name;
+      const email = this.state.newUser.email;
+      const message = `Welcome ${name},\nYou have been registered with the Bennett Task Tracker App! Check it out at http://bennett-task-tracker.herokuapp.com/`;
+
+      axios.post("/send/welcome", { name, email, message }).then(res => {
+        if (res.data.msg !== "success") {
+          alert("Email failed to send");
+        }
+      });
+    }
   };
 
   render() {
@@ -68,6 +70,7 @@ class Register extends Component {
               value={this.state.newUser.name}
               onChange={this.handleChange}
             />
+            <span className="red-text">{errors.name}</span>
           </div>
           <div>
             <label htmlFor="email">Email: </label>
@@ -78,6 +81,7 @@ class Register extends Component {
               value={this.state.newUser.email}
               onChange={this.handleChange}
             />
+            <span className="red-text">{errors.email}</span>
           </div>
           <div>
             <label htmlFor="password">Password: </label>
@@ -88,6 +92,7 @@ class Register extends Component {
               value={this.state.newUser.password}
               onChange={this.handleChange}
             />
+            <span className="red-text">{errors.password}</span>
           </div>
           <div>
             <label htmlFor="password2">Confirm Password: </label>
@@ -98,6 +103,7 @@ class Register extends Component {
               value={this.state.newUser.password2}
               onChange={this.handleChange}
             />
+            <span className="red-text">{errors.password2}</span>
           </div>
           <input type="submit" value="Register" />
         </form>
