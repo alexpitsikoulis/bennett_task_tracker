@@ -5,9 +5,7 @@ const { userRouter } = require("./controllers/User");
 const { taskRouter } = require("./controllers/Task");
 const { allTasksRouter } = require("./controllers/GetAllTasks");
 const { mailRouter } = require("./controllers/Mail");
-const nodemailer = require("nodemailer");
 const passport = require("passport");
-const creds = require("./config/nodemailerConfig");
 
 app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
