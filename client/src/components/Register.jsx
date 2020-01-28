@@ -37,9 +37,10 @@ class Register extends Component {
       password: this.state.newUser.password,
       password2: this.state.newUser.password2
     };
+
     this.props.registerUser(newUser, this.props.history);
 
-    if (Object.keys(this.props.errors).length) {
+    if (Object.keys(this.props.errors).length === 0) {
       const name = this.state.newUser.name;
       const email = this.state.newUser.email;
       const message = `Welcome ${name},\nYou have been registered with the Bennett Task Tracker App! Check it out at http://bennett-task-tracker.herokuapp.com/`;
