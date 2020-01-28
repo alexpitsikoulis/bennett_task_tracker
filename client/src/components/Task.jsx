@@ -80,6 +80,7 @@ class Task extends Component {
           estimatedHours: this.state.task.estimatedHours,
           description: this.state.task.description,
           userId: this.props.match.params.userId,
+          email: this.state.task.userEmail,
           status: this.state.task.status,
           dueDate: dueDate,
           assignedBy: this.state.task.assignedBy,

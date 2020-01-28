@@ -146,4 +146,28 @@ mailRouter.post("/welcome", (req, res, next) => {
   });
 });
 
+mailRouter.post("/reminder", (req, res, next) => {
+  var email = req.body.email;
+  var message = req.body.message;
+
+  var mail = {
+    from: "Bennett Task Bot",
+    to: email,
+    subject: `Reminder: You Have Unfinished Tasks Due Today`,
+    text: message
+  };
+
+  transporter.sendMail(mail, (err, data) => {
+    if (err) {
+      res.json({
+        msg: "fail"
+      });
+    } else {
+      res.json({
+        msg: "success"
+      });
+    }
+  });
+});
+
 module.exports = { mailRouter };

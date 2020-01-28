@@ -6,4 +6,3 @@ A simple app for the workplace for employees to assign tasks to each other and k
 
 - A calendar that shows when all tasks for a user are due
 - CSS overhaul
-- Email reminders on due date of each task

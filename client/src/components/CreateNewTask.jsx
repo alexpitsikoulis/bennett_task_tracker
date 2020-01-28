@@ -42,6 +42,7 @@ class CreateNewTask extends Component {
       estimatedHours: this.state.newTask.estimatedHours,
       description: this.state.newTask.description,
       userId: this.props.match.params.userId,
+      userEmail: this.state.user.email,
       dueDate: dueDate,
       assignedBy: this.props.auth.user.name,
       assignedById: this.props.auth.user.id
