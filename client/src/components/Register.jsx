@@ -31,6 +31,16 @@ class Register extends Component {
 
   handleSubmit = event => {
     event.preventDefault();
+
+    const name = this.state.newUser.name;
+    const email = this.state.newUser.email;
+    const message = `Welcome ${name},\nYou have been registered with the Bennett Task Tracker App! Check it out at http://bennett-task-tracker.herokuapp.com/`;
+
+    axios.post("/send/welcome", { name, email, message }).then(res => {
+      if (res.data.msg !== "success") {
+        alert("Email failed to send");
+      }
+    });
     const newUser = {
       name: this.state.newUser.name,
       email: this.state.newUser.email,

@@ -71,6 +71,19 @@ header h1 {
   font-size: 3vw;
 }
 
+.logout {
+  width: 90%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  margin-bottom: 20px;
+}
+
+.logout button {
+  height: 30px;
+  margin-left: 5px;
+}
+
 a:visited {
   color: blue;
 }

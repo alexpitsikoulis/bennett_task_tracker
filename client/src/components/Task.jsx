@@ -1,8 +1,10 @@
 import React, { Component } from "react";
 import { Link, Redirect } from "react-router-dom";
 import axios from "axios";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
 
-export default class Task extends Component {
+class Task extends Component {
   state = {
     task: {},
     userAssignedBy: {},
@@ -10,7 +12,9 @@ export default class Task extends Component {
     editTask: false,
     user: {},
     redirectToUser: false,
-    dueDateChanged: false
+    dueDateChanged: false,
+    initialStatus: "",
+    redirectToTaskAssigned: false
   };
 
   componentDidMount() {
@@ -25,7 +29,7 @@ export default class Task extends Component {
         `/api/users/${this.props.match.params.userId}/tasks/${this.props.match.params.taskId}`
       )
       .then(res => {
-        this.setState({ task: res.data });
+        this.setState({ task: res.data, initialStatus: res.data.status });
         axios
           .get(`/api/users/${res.data.assignedById}`)
           .then(res => {
@@ -136,6 +140,35 @@ export default class Task extends Component {
     }
   };
 
+  handleReopenTask = () => {
+    if (window.confirm("Are you sure you want to reopen this task?")) {
+      const copiedTask = { ...this.state.task };
+      copiedTask.status = "Started";
+      this.setState({ task: copiedTask });
+
+      const name = this.state.user.name;
+      const email = this.state.user.email;
+      const message = `Your task ${this.state.task.title} has been reopened.`;
+
+      axios
+        .post("/send/reopenedTask", { name, email, message })
+        .then(res => {
+          if (res.data.msg !== "success") {
+            alert("Email failed to send");
+          }
+        })
+        .then(() => {
+          axios.put(
+            `/api/users/${this.state.task.userId}/tasks/${this.state.task._id}`,
+            this.state.task
+          );
+        })
+        .then(() => {
+          this.setState({ redirectToTaskAssigned: true });
+        });
+    }
+  };
+
   handleDelete = () => {
     if (window.confirm("Are you sure you want to remove this task?")) {
       axios
@@ -176,11 +209,18 @@ export default class Task extends Component {
     if (this.state.redirectToUser) {
       return <Redirect to={`/${this.state.task.userId}`} />;
     }
+    if (this.state.redirectToTaskAssigned) {
+      return <Redirect to="/tasksAssigned" />;
+    }
     return (
       <div>
-        <button onClick={this.handleToggleEdit}>
-          {this.state.editTask ? "Back to Task" : "Edit Task"}
-        </button>
+        {this.state.initialStatus !== "Finished" &&
+        (this.props.auth.user.id === this.state.task.userId ||
+          this.props.auth.user.id === this.state.task.assignedById) ? (
+          <button onClick={this.handleToggleEdit}>
+            {this.state.editTask ? "Back to Task" : "Edit Task"}
+          </button>
+        ) : null}
         {this.state.editTask ? (
           <form onSubmit={this.handleSubmit}>
             <div>
@@ -271,10 +311,30 @@ export default class Task extends Component {
             <h4>Due Date: {this.getDueDate(false)}</h4>
             <h4>Status: {this.state.task.status}</h4>
             <p>{this.state.task.description}</p>
-            <button onClick={this.handleDelete}>Delete Task</button>
+            {(this.props.auth.user.id === this.state.task.userId ||
+              this.props.auth.user.id === this.state.task.assignedById) &&
+            this.state.task.status === "Finished" ? (
+              <div>
+                <button onClick={this.handleReopenTask}>Reopen Task</button>
+              </div>
+            ) : null}
+            {this.props.auth.user.id === this.state.task.userId ||
+            this.props.auth.user.id === this.state.task.assignedById ? (
+              <button onClick={this.handleDelete}>Delete Task</button>
+            ) : null}
           </div>
         )}
       </div>
     );
   }
 }
+
+Task.propTypes = {
+  auth: PropTypes.object.isRequired
+};
+
+const mapStateToProps = state => ({
+  auth: state.auth
+});
+
+export default connect(mapStateToProps)(Task);

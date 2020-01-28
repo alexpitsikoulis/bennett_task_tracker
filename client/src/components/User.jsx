@@ -2,8 +2,10 @@ import React, { Component } from "react";
 import { Link, Redirect } from "react-router-dom";
 import axios from "axios";
 import Tasks from "./Tasks";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
 
-export default class User extends Component {
+class User extends Component {
   state = {
     user: {},
     tasks: [],
@@ -86,9 +88,11 @@ export default class User extends Component {
           <button>Back to Users</button>
         </Link>
         <h1>{this.state.user.name}</h1>
-        <button onClick={this.handleToggleEdit}>
-          {this.state.editUser ? "Back to User" : "Edit User"}
-        </button>
+        {this.state.user._id === this.props.auth.user.id ? (
+          <button onClick={this.handleToggleEdit}>
+            {this.state.editUser ? "Back to User" : "Edit User"}
+          </button>
+        ) : null}
         <br />
         <h3>
           {this.state.showFinishedTasks
@@ -133,10 +137,22 @@ export default class User extends Component {
             openOrFinished={this.state.showFinishedTasks ? "Finished" : "Open"}
           />
         )}
-        <button onClick={this.handleDeleteUser} style={{ marginTop: "5vh" }}>
-          Delete User
-        </button>
+        {this.state.user._id === this.props.auth.user.id ? (
+          <button onClick={this.handleDeleteUser} style={{ marginTop: "5vh" }}>
+            Delete User
+          </button>
+        ) : null}
       </div>
     );
   }
 }
+
+User.propTypes = {
+  auth: PropTypes.object.isRequired
+};
+
+const mapStateToProps = state => ({
+  auth: state.auth
+});
+
+export default connect(mapStateToProps)(User);
