@@ -25,10 +25,10 @@ app.use(bodyParser.json());
 app.use(express.static(`${__dirname}/client/build`));
 app.use(passport.initialize());
 require("./config/passport")(passport);
-app.use("/send", mailRouter);
 app.use("/api/users", userRouter);
 app.use("/api/tasks", allTasksRouter);
 app.use("/api/users/:userId/tasks", taskRouter);
+app.use("/send", mailRouter);
 app.get("/*", (req, res) => {
   res.sendFile(`${__dirname}/client/build/index.html`);
 });
