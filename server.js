@@ -3,6 +3,7 @@ const bodyParser = require("body-parser");
 const app = express();
 const { userRouter } = require("./controllers/User");
 const { taskRouter } = require("./controllers/Task");
+const { allTasksRouter } = require("./controllers/GetAllTasks");
 const nodemailer = require("nodemailer");
 const passport = require("passport");
 const creds = require("./config/nodemailerConfig");
@@ -28,6 +29,7 @@ app.use(express.static(`${__dirname}/client/build`));
 app.use(passport.initialize());
 require("./config/passport")(passport);
 app.use("/api/users", userRouter);
+app.use("/api/tasks", allTasksRouter);
 app.use("/api/users/:userId/tasks", taskRouter);
 app.get("/*", (req, res) => {
   res.sendFile(`${__dirname}/client/build/index.html`);
@@ -110,6 +112,31 @@ app.post("/send/completedTask", (req, res, next) => {
     from: "Bennett Task Bot",
     to: email,
     subject: `A Task You Assigned Has Been Completed`,
+    text: message
+  };
+
+  transporter.sendMail(mail, (err, data) => {
+    if (err) {
+      res.json({
+        msg: "fail"
+      });
+    } else {
+      res.json({
+        msg: "success"
+      });
+    }
+  });
+});
+
+app.post("/send/reopenedTask", (req, res, next) => {
+  var name = req.body.name;
+  var email = req.body.email;
+  var message = req.body.message;
+
+  var mail = {
+    from: "Bennett Task Bot",
+    to: email,
+    subject: `A Task Has Been Reopened`,
     text: message
   };
 

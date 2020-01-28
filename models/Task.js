@@ -15,6 +15,14 @@ const TaskSchema = new mongoose.Schema({
 
 const TaskCollection = mongoose.model("Task", TaskSchema);
 
+function getAllTasks() {
+  return TaskCollection.find();
+}
+
+function getAllTasksByAssignedById(assignedById) {
+  return TaskCollection.find({ assignedById: assignedById });
+}
+
 function getAllTasksByUserId(userId) {
   return TaskCollection.find({ userId: userId });
 }
@@ -35,10 +43,17 @@ function deleteTask(taskId) {
   return TaskCollection.findByIdAndDelete(taskId);
 }
 
+function deleteAllTasks() {
+  return TaskCollection.deleteMany();
+}
+
 module.exports = {
+  getAllTasks,
   getAllTasksByUserId,
+  getAllTasksByAssignedById,
   getTaskById,
   createTask,
   editTask,
-  deleteTask
+  deleteTask,
+  deleteAllTasks
 };
