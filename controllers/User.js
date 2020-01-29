@@ -90,8 +90,6 @@ userRouter.post("/register", (req, res) => {
 userRouter.post("/login", (req, res) => {
   const { errors, isValid } = validateLoginInput(req.body);
 
-  console.log(req.body);
-
   if (!isValid) {
     return res.status(400).json(errors);
   }
