@@ -36,8 +36,10 @@ app.get("/*", (req, res) => {
   res.sendFile(`${__dirname}/client/build/index.html`);
 });
 
-schedule.scheduleJob("22 * * * *", () => {
-  axios.get("http://localhost:3001/api/tasks").then(tasks => {
+const PORT = process.env.PORT || 3001;
+
+schedule.scheduleJob("27 * * * *", () => {
+  axios.get(`http://localhost:${PORT}/api/tasks`).then(tasks => {
     const unfinishedTasksDueToday = tasks.data.filter(task => {
       const year = new Date(task.dueDate).getFullYear();
       const month = new Date(task.dueDate).getMonth();
@@ -56,7 +58,7 @@ schedule.scheduleJob("22 * * * *", () => {
       const email = task.userEmail;
       const message = `Your task ${task.title} is due today and has not yet been marked completed.`;
       axios
-        .post("http://localhost:3001/send/reminder", { email, message })
+        .post(`http://localhost:${PORT}/send/reminder`, { email, message })
         .then(() => {
           console.log("message sent successfully");
         })
@@ -67,7 +69,6 @@ schedule.scheduleJob("22 * * * *", () => {
   });
 });
 
-const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
   console.log(`App is listening on PORT ${PORT}`);
 });
