@@ -38,7 +38,7 @@ app.get("/*", (req, res) => {
 
 const PORT = process.env.PORT || 3001;
 
-schedule.scheduleJob("40 8 * * *", () => {
+schedule.scheduleJob("0 9 * * *", () => {
   axios
     .get(`http://localhost:${PORT}/api/tasks/`)
     .then(res => {
