@@ -38,7 +38,7 @@ app.get("/*", (req, res) => {
 
 const PORT = process.env.PORT || 3001;
 
-schedule.scheduleJob("0 8 * * *", () => {
+schedule.scheduleJob("30 * * * * *", () => {
   axios
     .get(`http://localhost:${PORT}/api/tasks/`)
     .then(res => {
@@ -53,10 +53,11 @@ schedule.scheduleJob("0 8 * * *", () => {
         );
       });
       dueToday.forEach(task => {
-        const email = task.userEmail;
-        const message = `Your task ${task.title} has not been completed and is due today!`;
+        console.log(task);
+        // const email = task.userEmail;
+        // const message = `Your task ${task.title} has not been completed and is due today!`;
 
-        axios.post("http://localhost:3001/send/reminder", { email, message });
+        // axios.post("http://localhost:3001/send/reminder", { email, message });
       });
     })
     .catch(err => {
