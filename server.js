@@ -36,6 +36,37 @@ app.get("/*", (req, res) => {
   res.sendFile(`${__dirname}/client/build/index.html`);
 });
 
+schedule.scheduleJob("22 * * * *", () => {
+  axios.get("http://localhost:3001/api/tasks").then(tasks => {
+    const unfinishedTasksDueToday = tasks.data.filter(task => {
+      const year = new Date(task.dueDate).getFullYear();
+      const month = new Date(task.dueDate).getMonth();
+      const date = new Date(task.dueDate).getDate();
+      const today = new Date(Date.now());
+
+      return (
+        year === today.getFullYear() &&
+        month === today.getMonth() &&
+        date === today.getDate() &&
+        task.status !== "Finished"
+      );
+    });
+
+    unfinishedTasksDueToday.forEach(task => {
+      const email = task.userEmail;
+      const message = `Your task ${task.title} is due today and has not yet been marked completed.`;
+      axios
+        .post("http://localhost:3001/send/reminder", { email, message })
+        .then(() => {
+          console.log("message sent successfully");
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    });
+  });
+});
+
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
   console.log(`App is listening on PORT ${PORT}`);
