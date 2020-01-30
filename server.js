@@ -57,10 +57,15 @@ schedule.scheduleJob("0 8 * * *", () => {
     });
 
     unfinishedTasksDueToday.forEach(task => {
+      const subject = `Reminder: You Have Unfinished Tasks Due Today`;
       const email = task.userEmail;
       const message = `Your task ${task.title} is due today and has not yet been marked completed.`;
       axios
-        .post(`http://localhost:${PORT}/send/reminder`, { email, message })
+        .post(`http://localhost:${PORT}/send`, {
+          subject,
+          email,
+          message
+        })
         .then(() => {
           console.log("message sent successfully");
         })

@@ -100,12 +100,12 @@ class Task extends Component {
           assignedById: this.state.task.assignedById
         };
 
-        const name = this.state.user.name;
+        const subject = `A Task You Assigned Has Been Completed`;
         const email = this.state.userAssignedBy.email;
         const message = `${this.state.user.name} has completed the task ${this.state.task.title}.`;
 
         axios
-          .post("/send/completedTask", { name, email, message })
+          .post("/send", { subject, email, message })
           .then(res => {
             if (res.data.msg !== "success") {
               alert("Email failed to send");
@@ -121,12 +121,12 @@ class Task extends Component {
         this.setState({ editTask: false, dueDateChanged: false });
       }
     } else {
-      const name = this.state.user.name;
+      const subject = `One Of Your Tasks Has Been Updated`;
       const email = this.state.user.email;
       const message = `Your task ${this.state.task.title} has been updated\n\nDescription: ${this.state.task.description}\n\nThis is a ${this.state.task.priority} priority task`;
 
       axios
-        .post("/send/updatedTask", { name, email, message })
+        .post("/send", { subject, email, message })
         .then(res => {
           if (res.data.msg !== "success") {
             alert("Email failed to send");
@@ -159,12 +159,12 @@ class Task extends Component {
       copiedTask.status = "Started";
       this.setState({ task: copiedTask });
 
-      const name = this.state.user.name;
+      const subject = `A Task Has Been Reopened`;
       const email = this.state.user.email;
       const message = `Your task ${this.state.task.title} has been reopened.`;
 
       axios
-        .post("/send/reopenedTask", { name, email, message })
+        .post("/send", { subject, email, message })
         .then(res => {
           if (res.data.msg !== "success") {
             alert("Email failed to send");

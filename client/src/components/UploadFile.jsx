@@ -45,10 +45,11 @@ export default class UploadFile extends Component {
     axios
       .post("/api/files/add", formData)
       .then(() => {
+        const subject = `A New File Has Been Added To One of Your Tasks`;
         const email = this.state.task.userEmail;
         const message = `${this.state.task.assignedBy} has added a new file to your task ${this.state.task.title}`;
 
-        axios.post("/send/newFile", { email, message }).then(res => {
+        axios.post("/send", { subject, email, message }).then(res => {
           if (res.data.msg !== "success") {
             alert("Email failed to send");
           }

@@ -48,12 +48,12 @@ class CreateNewTask extends Component {
       assignedById: this.props.auth.user.id
     };
 
-    const name = this.state.user.name;
+    const subject = `You Have Been Assigned a New Task`;
     const email = this.state.user.email;
     const message = `${newTaskObject.assignedBy} assigned you the task ${newTaskObject.title}\n\nDescription: ${newTaskObject.description}\n\nThis is a ${newTaskObject.priority} priority task!`;
 
     axios
-      .post("/send/newTask", { name, email, message })
+      .post("/send", { subject, email, message })
       .then(res => {
         if (res.data.msg !== "success") {
           alert("Email failed to send");

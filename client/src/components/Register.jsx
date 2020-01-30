@@ -41,11 +41,11 @@ class Register extends Component {
     this.props.registerUser(newUser, this.props.history);
 
     if (Object.keys(this.props.errors).length === 0) {
-      const name = this.state.newUser.name;
+      const subject = `Welcome To The Bennett Task Tracker App`;
       const email = this.state.newUser.email;
-      const message = `Welcome ${name},\nYou have been registered with the Bennett Task Tracker App! Check it out at http://bennett-task-tracker.herokuapp.com/`;
+      const message = `Welcome ${newUser.name},\nYou have been registered with the Bennett Task Tracker App! Check it out at http://bennett-task-tracker.herokuapp.com/`;
 
-      axios.post("/send/welcome", { name, email, message }).then(res => {
+      axios.post("/send", { subject, email, message }).then(res => {
         if (res.data.msg !== "success") {
           alert("Email failed to send");
         }
