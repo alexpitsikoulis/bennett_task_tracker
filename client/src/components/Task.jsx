@@ -7,8 +7,9 @@ import { connect } from "react-redux";
 class Task extends Component {
   state = {
     task: {},
+    files: [],
     userAssignedBy: {},
-    errors: [],
+    errors: {},
     editTask: false,
     user: {},
     redirectToUser: false,
@@ -19,6 +20,7 @@ class Task extends Component {
 
   componentDidMount() {
     this.getTask();
+    this.getFiles();
   }
 
   componentWillReceiveProps(nextProps) {}
@@ -41,6 +43,17 @@ class Task extends Component {
         axios.get(`/api/users/${this.state.task.userId}`).then(res2 => {
           this.setState({ user: res2.data });
         });
+      })
+      .catch(err => {
+        this.setState({ errors: err.data });
+      });
+  };
+
+  getFiles = () => {
+    axios
+      .get(`/api/files/${this.props.match.params.taskId}`)
+      .then(res => {
+        this.setState({ files: res.data });
       })
       .catch(err => {
         this.setState({ errors: err.data });
@@ -181,6 +194,19 @@ class Task extends Component {
     }
   };
 
+  handleDeleteFile = event => {
+    if (window.confirm("Are you sure you want to delete this file?")) {
+      axios
+        .delete(`/api/files/${event.target.id}`)
+        .then(() => {
+          this.getFiles();
+        })
+        .catch(err => {
+          this.setState({ errors: err.data });
+        });
+    }
+  };
+
   getTaskDateTimeStarted = () => {
     const taskDT = new Date(this.state.task.dateTimeStarted);
     return taskDT.getHours() > 12
@@ -212,6 +238,23 @@ class Task extends Component {
     if (this.state.redirectToTaskAssigned) {
       return <Redirect to="/tasksAssigned" />;
     }
+
+    const fileList = this.state.files.map(file => {
+      return (
+        <li>
+          <a download={file.title} href={file.image} target="_blank">
+            {file.title}
+          </a>
+          {this.props.auth.user.id === this.state.task.assignedById ||
+          this.props.auth.user.id === this.state.task.userId ? (
+            <button id={file._id} onClick={this.handleDeleteFile}>
+              X
+            </button>
+          ) : null}
+        </li>
+      );
+    });
+
     return (
       <div>
         {this.state.initialStatus !== "Finished" &&
@@ -311,6 +354,17 @@ class Task extends Component {
             <h4>Due Date: {this.getDueDate(false)}</h4>
             <h4>Status: {this.state.task.status}</h4>
             <p>{this.state.task.description}</p>
+            {this.state.files.length ? (
+              <div className="file-list">
+                <strong>Files Associated With This Task:</strong>
+                <br />
+                {fileList}
+              </div>
+            ) : null}
+            <Link to={`/${this.state.task._id}/uploadFiles`}>
+              Add Files For This Task
+            </Link>
+            <br />
             {(this.props.auth.user.id === this.state.task.userId ||
               this.props.auth.user.id === this.state.task.assignedById) &&
             this.state.task.status === "Finished" ? (

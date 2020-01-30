@@ -24,6 +24,17 @@ allTasksRouter.get("/assignedBy/:assignedById", (req, res) => {
     });
 });
 
+allTasksRouter.get("/:taskId", (req, res) => {
+  taskApi
+    .getTaskById(req.params.taskId)
+    .then(task => {
+      res.json(task);
+    })
+    .catch(err => {
+      res.json(err);
+    });
+});
+
 allTasksRouter.delete("/all", (req, res) => {
   taskApi
     .deleteAllTasks()

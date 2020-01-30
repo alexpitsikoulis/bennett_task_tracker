@@ -1,3 +1,4 @@
+require("dotenv/config");
 const express = require("express");
 const bodyParser = require("body-parser");
 const app = express();
@@ -6,7 +7,7 @@ const { userRouter } = require("./controllers/User");
 const { taskRouter } = require("./controllers/Task");
 const { allTasksRouter } = require("./controllers/GetAllTasks");
 const { mailRouter } = require("./controllers/Mail");
-const taskApi = require("./models/Task");
+const { fileRouter } = require("./controllers/File");
 const passport = require("passport");
 const schedule = require("node-schedule");
 
@@ -28,6 +29,7 @@ app.use(bodyParser.json());
 app.use(express.static(`${__dirname}/client/build`));
 app.use(passport.initialize());
 require("./config/passport")(passport);
+app.use("/api/files", fileRouter);
 app.use("/api/users", userRouter);
 app.use("/api/tasks", allTasksRouter);
 app.use("/api/users/:userId/tasks", taskRouter);
