@@ -1,13 +1,12 @@
 const express = require("express");
 const mailRouter = express.Router();
 const nodemailer = require("nodemailer");
-const creds = require("../config/nodemailerConfig");
 
 var transport = {
   host: "smtp.gmail.com",
   auth: {
-    user: creds.USER,
-    pass: creds.PASS
+    user: process.env.EMAIL_ADDRESS,
+    pass: process.env.EMAIL_PASSWORD
   }
 };
 
@@ -22,7 +21,6 @@ transporter.verify((error, success) => {
 });
 
 mailRouter.post("/newTask", (req, res, next) => {
-  var name = req.body.name;
   var email = req.body.email;
   var message = req.body.message;
 
@@ -47,7 +45,6 @@ mailRouter.post("/newTask", (req, res, next) => {
 });
 
 mailRouter.post("/updatedTask", (req, res, next) => {
-  var name = req.body.name;
   var email = req.body.email;
   var message = req.body.message;
 
@@ -72,7 +69,6 @@ mailRouter.post("/updatedTask", (req, res, next) => {
 });
 
 mailRouter.post("/completedTask", (req, res, next) => {
-  var name = req.body.name;
   var email = req.body.email;
   var message = req.body.message;
 
@@ -97,7 +93,6 @@ mailRouter.post("/completedTask", (req, res, next) => {
 });
 
 mailRouter.post("/reopenedTask", (req, res, next) => {
-  var name = req.body.name;
   var email = req.body.email;
   var message = req.body.message;
 
@@ -122,7 +117,6 @@ mailRouter.post("/reopenedTask", (req, res, next) => {
 });
 
 mailRouter.post("/welcome", (req, res, next) => {
-  var name = req.body.name;
   var email = req.body.email;
   var message = req.body.message;
 
@@ -154,6 +148,30 @@ mailRouter.post("/reminder", (req, res, next) => {
     from: "Bennett Task Bot",
     to: email,
     subject: `Reminder: You Have Unfinished Tasks Due Today`,
+    text: message
+  };
+
+  transporter.sendMail(mail, (err, data) => {
+    if (err) {
+      res.json({
+        msg: "fail"
+      });
+    } else {
+      res.json({
+        msg: "success"
+      });
+    }
+  });
+});
+
+mailRouter.post("/newFile", (req, res, next) => {
+  var email = req.body.email;
+  var message = req.body.message;
+
+  var mail = {
+    from: "Bennett Task Bot",
+    to: email,
+    subject: `A New File Has Been Added To One of Your Tasks`,
     text: message
   };
 

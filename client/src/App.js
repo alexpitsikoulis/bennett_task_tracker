@@ -15,6 +15,7 @@ import jwt_decode from "jwt-decode";
 import setAuthToken from "./utils/setAuthToken";
 import { setCurrentUser, logoutUser } from "./actions/authActions";
 import PrivateRoute from "./components/private-route/PrivateRoute";
+import UploadFile from "./components/UploadFile";
 
 if (localStorage.jwtToken) {
   const token = localStorage.jwtToken;
@@ -44,6 +45,10 @@ export default class App extends Component {
                 exact
                 path="/tasksAssigned"
                 component={TasksAssinged}
+              />
+              <PrivateRoute
+                path="/:taskId/uploadFiles"
+                component={UploadFile}
               />
               <PrivateRoute path="/:userId/newTask" component={CreateNewTask} />
               <PrivateRoute path="/:userId/tasks/:taskId" component={Task} />

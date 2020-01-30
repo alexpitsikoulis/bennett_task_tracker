@@ -89,6 +89,18 @@ header h1 {
   color: red;
 }
 
+.file-list {
+  border: 2px solid #acbe26;
+  margin: 1vh auto;
+  width: 30vw;
+  padding: 1vh;
+  font-size: 1.2em;
+}
+
+.file-list button {
+  margin-left: 0.3vw;
+}
+
 a:visited {
   color: blue;
 }
