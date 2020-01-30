@@ -242,7 +242,7 @@ class Task extends Component {
     const fileList = this.state.files.map(file => {
       return (
         <li>
-          <a download={file.title} href={file.image} target="_blank">
+          <a href={file.image} target="_blank">
             {file.title}
           </a>
           {this.props.auth.user.id === this.state.task.assignedById ||
