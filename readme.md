@@ -4,6 +4,6 @@ A simple app for the workplace for employees to assign tasks to each other and k
 
 ## In Future Verions
 
-- File upload and storage so users can attach pertinent files to tasks
+- A file upload form that allows for multiple files as well as non-image files
 - A calendar that shows when all tasks for a user are due
 - CSS overhaul
