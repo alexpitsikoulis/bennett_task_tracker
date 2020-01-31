@@ -396,13 +396,17 @@ class Task extends Component {
                 {fileList}
               </div>
             ) : null}
-            <div>
-              <label htmlFor="file">Add a File For This Task: </label>
-              <ReactFilestack
-                apikey={filestackApiKey}
-                onSuccess={res => this.handleFilestack(res)}
-              />
-            </div>
+
+            {this.props.auth.user.id === this.state.task.userId ||
+            this.props.auth.user.id === this.state.task.assignedById ? (
+              <div>
+                <label htmlFor="file">Add a File For This Task: </label>
+                <ReactFilestack
+                  apikey={filestackApiKey}
+                  onSuccess={res => this.handleFilestack(res)}
+                />
+              </div>
+            ) : null}
             <br />
             {(this.props.auth.user.id === this.state.task.userId ||
               this.props.auth.user.id === this.state.task.assignedById) &&

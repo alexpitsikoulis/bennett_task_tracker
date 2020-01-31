@@ -3,6 +3,8 @@ import { Link, Redirect } from "react-router-dom";
 import axios from "axios";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
+import ReactFilestack from "filestack-react";
+import filestackApiKey from "../filestackApiKey";
 
 class CreateNewTask extends Component {
   state = {
@@ -13,6 +15,7 @@ class CreateNewTask extends Component {
       description: "",
       dueDate: ""
     },
+    file: {},
     user: {},
     redirectToUser: false
   };
@@ -33,6 +36,20 @@ class CreateNewTask extends Component {
     this.setState({ newTask: copiedNewTask });
   };
 
+  handleFilestack = filestackRes => {
+    if (filestackRes.filesUploaded.length) {
+      const file = filestackRes.filesUploaded[0];
+      const fileObject = {
+        title: file.filename,
+        file: file.url,
+        fileId: file.uploadId
+      };
+      this.setState({ file: fileObject });
+    } else {
+      alert("File failed to upload");
+    }
+  };
+
   handleSubmit = event => {
     event.preventDefault();
     const dueDate = new Date(`${this.state.newTask.dueDate}T17:00:00`);
@@ -47,27 +64,33 @@ class CreateNewTask extends Component {
       assignedBy: this.props.auth.user.name,
       assignedById: this.props.auth.user.id
     };
-
-    const subject = `You Have Been Assigned a New Task`;
-    const email = this.state.user.email;
-    const message = `${newTaskObject.assignedBy} assigned you the task ${newTaskObject.title}\n\nDescription: ${newTaskObject.description}\n\nThis is a ${newTaskObject.priority} priority task!`;
-
     axios
-      .post("/send", { subject, email, message })
-      .then(res => {
-        if (res.data.msg !== "success") {
-          alert("Email failed to send");
+      .post(`/api/users/${this.props.match.params.userId}/tasks`, newTaskObject)
+      .then(newTaskRes => {
+        const subject = `You Have Been Assigned a New Task`;
+        const email = this.state.user.email;
+        const message = `${newTaskObject.assignedBy} assigned you the task ${newTaskObject.title}\n\nDescription: ${newTaskObject.description}\n\nThis is a ${newTaskObject.priority} priority task!`;
+
+        axios.post("/send", { subject, email, message }).then(res => {
+          if (res.data.msg !== "success") {
+            alert("Email failed to send");
+          }
+        });
+
+        if (this.state.file.title) {
+          const fileObject = {
+            title: this.state.file.title,
+            file: this.state.file.file,
+            fileId: this.state.file.fileId,
+            taskId: newTaskRes.data._id
+          };
+          axios.post("/api/files", fileObject).then(() => {
+            console.log("file upload successful !");
+          });
         }
       })
       .then(() => {
-        axios
-          .post(
-            `/api/users/${this.props.match.params.userId}/tasks`,
-            newTaskObject
-          )
-          .then(() => {
-            this.setState({ redirectToUser: true });
-          });
+        this.setState({ redirectToUser: true });
       });
   };
 
@@ -132,6 +155,16 @@ class CreateNewTask extends Component {
               value={this.state.newTask.description}
               onChange={this.handleChange}
             ></textarea>
+          </div>
+          <div>
+            <label htmlFor="file">Add a File For This Task: </label>
+            <ReactFilestack
+              apikey={filestackApiKey}
+              onSuccess={res => this.handleFilestack(res)}
+            />
+            {this.state.file.title
+              ? `file uploaded: ${this.state.file.title}`
+              : null}
           </div>
           <input type="submit" value="Submit" />
         </form>
