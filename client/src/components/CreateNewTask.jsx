@@ -52,7 +52,10 @@ class CreateNewTask extends Component {
 
   handleSubmit = event => {
     event.preventDefault();
-    const dueDate = new Date(`${this.state.newTask.dueDate}T17:00:00`);
+    const dueDate =
+      document.querySelector("#dueDate").value === ""
+        ? new Date(Date.now())
+        : new Date(`${this.state.newTask.dueDate}T17:00:00`);
     const newTaskObject = {
       title: this.state.newTask.title,
       priority: this.state.newTask.priority,
