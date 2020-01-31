@@ -95,7 +95,7 @@ class Task extends Component {
           estimatedHours: this.state.task.estimatedHours,
           description: this.state.task.description,
           userId: this.props.match.params.userId,
-          email: this.state.task.userEmail,
+          userEmail: this.state.task.userEmail,
           status: this.state.task.status,
           dueDate: dueDate,
           assignedBy: this.state.task.assignedBy,
@@ -143,8 +143,11 @@ class Task extends Component {
             estimatedHours: this.state.task.estimatedHours,
             description: this.state.task.description,
             userId: this.props.match.params.userId,
+            userEmail: this.state.task.userEmail,
             status: this.state.task.status,
-            dueDate: dueDate
+            dueDate: dueDate,
+            assignedBy: this.state.task.assignedBy,
+            assignedById: this.state.task.assignedById
           };
           axios.put(
             `/api/users/${this.state.task.userId}/tasks/${this.state.task._id}`,
