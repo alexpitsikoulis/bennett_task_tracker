@@ -15,6 +15,7 @@ import jwt_decode from "jwt-decode";
 import setAuthToken from "./utils/setAuthToken";
 import { setCurrentUser, logoutUser } from "./actions/authActions";
 import PrivateRoute from "./components/private-route/PrivateRoute";
+import Admin from "./components/Admin";
 
 if (localStorage.jwtToken) {
   const token = localStorage.jwtToken;
@@ -37,6 +38,7 @@ export default class App extends Component {
           <div className="App">
             <Header />
             <Switch>
+              <PrivateRoute exact path="/admin" component={Admin} />
               <Route exact path="/register" component={Register} />
               <Route exact path="/login" component={Login} />
               <PrivateRoute exact path="/" component={Home} />
