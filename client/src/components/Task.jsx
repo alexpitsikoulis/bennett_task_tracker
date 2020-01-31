@@ -212,6 +212,17 @@ class Task extends Component {
         .then(() => {
           this.getFiles();
         })
+        .then(() => {
+          const subject = `A File Has Been Uploaded For One Of Your Tasks`;
+          const email = this.state.task.userEmail;
+          const message = `${this.props.auth.user.name} has added a file called "${fileObject.title}" to your task ${this.state.task.title}`;
+
+          axios.post("/send", { subject, email, message }).then(res => {
+            if (res.data.msg !== "success") {
+              alert("Email failed to send");
+            }
+          });
+        })
         .catch(() => {
           alert("File upload failed!");
         });
