@@ -3,6 +3,8 @@ import { Link, Redirect } from "react-router-dom";
 import axios from "axios";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
+import ReactFilestack from "filestack-react";
+import filestackApiKey from "../filestackApiKey";
 
 class Task extends Component {
   state = {
@@ -51,7 +53,7 @@ class Task extends Component {
 
   getFiles = () => {
     axios
-      .get(`/api/files/${this.props.match.params.taskId}`)
+      .get(`/api/files/byTask/${this.props.match.params.taskId}`)
       .then(res => {
         this.setState({ files: res.data });
       })
@@ -194,6 +196,28 @@ class Task extends Component {
     }
   };
 
+  handleFilestack = filestackRes => {
+    if (filestackRes.filesUploaded.length) {
+      const file = filestackRes.filesUploaded[0];
+
+      const fileObject = {
+        title: file.filename,
+        file: file.url,
+        fileId: file.uploadId,
+        taskId: this.state.task._id
+      };
+
+      axios
+        .post(`/api/files/`, fileObject)
+        .then(() => {
+          this.getFiles();
+        })
+        .catch(() => {
+          alert("File upload failed!");
+        });
+    }
+  };
+
   handleDeleteFile = event => {
     if (window.confirm("Are you sure you want to delete this file?")) {
       axios
@@ -241,8 +265,8 @@ class Task extends Component {
 
     const fileList = this.state.files.map(file => {
       return (
-        <li>
-          <a href={file.image} target="_blank">
+        <li key={file._id}>
+          <a href={file.file} target="_blank" rel="noopener noreferrer">
             {file.title}
           </a>
           {this.props.auth.user.id === this.state.task.assignedById ||
@@ -361,9 +385,13 @@ class Task extends Component {
                 {fileList}
               </div>
             ) : null}
-            <Link to={`/${this.state.task._id}/uploadFiles`}>
-              Add Files For This Task
-            </Link>
+            <div>
+              <label htmlFor="file">Add a File For This Task: </label>
+              <ReactFilestack
+                apikey={filestackApiKey}
+                onSuccess={res => this.handleFilestack(res)}
+              />
+            </div>
             <br />
             {(this.props.auth.user.id === this.state.task.userId ||
               this.props.auth.user.id === this.state.task.assignedById) &&

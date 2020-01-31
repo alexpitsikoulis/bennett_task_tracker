@@ -8,6 +8,7 @@
 
 # testing
 /coverage
+/models/clearData.js
 
 # production
 /build
