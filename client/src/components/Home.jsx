@@ -46,8 +46,8 @@ class Home extends Component {
       });
     return (
       <div>
-        <h1>All Users</h1>
-        {userList}
+        <h1 className="users-header">All Users</h1>
+        <div className="users-list">{userList}</div>
       </div>
     );
   }

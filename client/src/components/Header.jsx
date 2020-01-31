@@ -11,15 +11,25 @@ class Header extends Component {
   };
 
   render() {
+    const navLinkStyles = {
+      color: "white",
+      textDecoration: "none"
+    };
     return (
       <header className="header">
         <Link to="/" style={{ textDecoration: "none" }}>
           <h1>Bennett Task Tracker</h1>
         </Link>
         <nav>
-          <a href={`/${this.props.auth.user.id}`}>My Tasks</a>
-          <Link to="/">All Users</Link>
-          <Link to="/tasksAssigned">Tasks I Have Assigned</Link>
+          <a href={`/${this.props.auth.user.id}`} style={navLinkStyles}>
+            My Tasks
+          </a>
+          <Link to="/" style={navLinkStyles}>
+            All Users
+          </Link>
+          <Link to="/tasksAssigned" style={navLinkStyles}>
+            Tasks I Have Assigned
+          </Link>
         </nav>
         {this.props.auth.user.name ? (
           <div className="logout">

@@ -65,11 +65,18 @@ nav {
   display: flex;
   justify-content: space-around;
   font-size: 1.2em;
+  border-top: 1px solid grey;
+  border-bottom: 1px solid grey;
+  padding: 1vh;
 }
 
 header h1 {
   color: rgb(245, 245, 245);
   font-size: 3vw;
+}
+
+.users-header {
+  font-size: 3em;
 }
 
 .logout {

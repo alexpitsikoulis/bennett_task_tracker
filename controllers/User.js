@@ -35,7 +35,7 @@ userRouter.get("/:userId", (req, res) => {
 });
 
 userRouter.put("/:userId", (req, res) => {
-  User.findByIdAndEdit(req.params.userId, req.body)
+  User.findByIdAndUpdate(req.params.userId, req.body)
     .then(user => {
       res.json(user);
     })
