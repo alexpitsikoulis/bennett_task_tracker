@@ -1,11 +1,33 @@
 import React, { Component } from "react";
 import axios from "axios";
+import { Link } from "react-router-dom";
 import * as dateFns from "date-fns";
+import { connect } from "react-redux";
+import PropTypes from "prop-types";
 
-export default class Calendar extends Component {
+class Calendar extends Component {
   state = {
     currentMonth: new Date(),
-    selectedDate: new Date()
+    selectedDate: new Date(),
+    tasks: [],
+    errors: {}
+  };
+
+  componentDidMount() {
+    this.getTasks();
+  }
+
+  getTasks = () => {
+    axios
+      .get(`/api/users/${this.props.auth.user.id}/tasks`)
+      .then(res => {
+        this.setState({
+          tasks: res.data.filter(task => task.status !== "Finished")
+        });
+      })
+      .catch(err => {
+        this.setState({ errors: err.data });
+      });
   };
 
   renderHeader() {
@@ -65,6 +87,23 @@ export default class Calendar extends Component {
       for (let i = 0; i < 7; i++) {
         formattedDate = dateFns.format(day, dateFormat);
         const cloneDay = day;
+        const tasksForDay = this.state.tasks
+          .filter(task => {
+            console.log(task.dueDate + "\n" + day);
+            return (
+              new Date(task.dueDate).getMonth() == new Date(day).getMonth() &&
+              new Date(task.dueDate).getDate() == new Date(day).getDate() &&
+              new Date(task.dueDate).getFullYear() ==
+                new Date(day).getFullYear()
+            );
+          })
+          .map(task => (
+            <li className="calendar-task">
+              <Link to={`/${this.props.auth.user.id}/tasks/${task._id}`}>
+                {task.title}
+              </Link>
+            </li>
+          ));
         days.push(
           <div
             className={`col cell ${
@@ -81,6 +120,7 @@ export default class Calendar extends Component {
           >
             <span className="number">{formattedDate}</span>
             <span className="bg">{formattedDate}</span>
+            {tasksForDay}
           </div>
         );
         day = dateFns.addDays(day, 1);
@@ -112,12 +152,46 @@ export default class Calendar extends Component {
   };
 
   render() {
+    const tasksForDay = this.state.tasks
+      .filter(task => {
+        const day = this.state.selectedDate;
+        return (
+          new Date(task.dueDate).getMonth() == new Date(day).getMonth() &&
+          new Date(task.dueDate).getDate() == new Date(day).getDate() &&
+          new Date(task.dueDate).getFullYear() == new Date(day).getFullYear()
+        );
+      })
+      .map(task => (
+        <li>
+          <Link to={`/${this.props.auth.user.id}/tasks/${task._id}`}>
+            {task.title}
+          </Link>
+        </li>
+      ));
     return (
       <div className="calendar">
         {this.renderHeader()}
         {this.renderDays()}
         {this.renderCells()}
+        <div>
+          <h2>
+            Tasks Due For{" "}
+            {`${this.state.selectedDate.getMonth() +
+              1}/${this.state.selectedDate.getDate()}/${this.state.selectedDate.getFullYear()}`}
+          </h2>
+          {tasksForDay}
+        </div>
       </div>
     );
   }
 }
+
+Calendar.propTypes = {
+  auth: PropTypes.object.isRequired
+};
+
+const mapStateToProps = state => ({
+  auth: state.auth
+});
+
+export default connect(mapStateToProps)(Calendar);

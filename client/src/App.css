@@ -51,7 +51,7 @@
 
 header {
   background-color: #acbe26;
-  height: 20vh;
+  height: 25vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -113,15 +113,6 @@ a:visited {
   color: blue;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
 @import url(https://fonts.googleapis.com/css?family=Open+Sans:300, 400, 700);
 @import url(https://fonts.googleapis.com/icon?family=Material+Icons);
 
@@ -143,8 +134,6 @@ a:visited {
   font-feature-settings: "liga";
 }
 
-/* VARIABLES */
-
 :root {
   --main-color: #1a8fff;
   --text-color: #777;
@@ -154,49 +143,9 @@ a:visited {
   --neutral-color: #fff;
 }
 
-/* GENERAL */
-
 * {
   box-sizing: border-box;
 }
-
-body {
-  font-family: "Open Sans", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
-  font-size: 1em;
-  font-weight: 300;
-  line-height: 1.5;
-  color: var(--text-color);
-  background: var(--bg-color);
-  position: relative;
-}
-
-header {
-  display: block;
-  width: 100%;
-  padding: 1.75em 0;
-  border-bottom: 1px solid var(--border-color);
-  background: var(--neutral-color);
-}
-
-header #logo {
-  font-size: 175%;
-  text-align: center;
-  color: var(--main-color);
-  line-height: 1;
-}
-
-header #logo .icon {
-  padding-right: 0.25em;
-}
-
-main {
-  display: block;
-  margin: 0 auto;
-  margin-top: 5em;
-  max-width: 50em;
-}
-
-/* GRID */
 
 .row {
   margin: 0;
@@ -348,4 +297,9 @@ main {
   flex-grow: 0;
   flex-basis: calc(100% / 7);
   width: calc(100% / 7);
+}
+
+.calendar-task {
+  text-align: left;
+  font-size: 0.8em;
 }
