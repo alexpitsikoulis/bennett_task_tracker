@@ -9,6 +9,7 @@ import CreateNewTask from "./components/CreateNewTask";
 import Login from "./components/Login";
 import Register from "./components/Register";
 import TasksAssinged from "./components/TasksAssigned";
+import Calendar from "./components/Calendar";
 import { Provider } from "react-redux";
 import store from "./store";
 import jwt_decode from "jwt-decode";
@@ -45,6 +46,7 @@ export default class App extends Component {
                 path="/tasksAssigned"
                 component={TasksAssinged}
               />
+              <PrivateRoute exact path="/calendar" component={Calendar} />
               <PrivateRoute path="/:userId/newTask" component={CreateNewTask} />
               <PrivateRoute path="/:userId/tasks/:taskId" component={Task} />
               <PrivateRoute path="/:userId" component={User} />

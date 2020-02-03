@@ -5,6 +5,7 @@
   "dependencies": {
     "axios": "^0.19.0",
     "classnames": "^2.2.6",
+    "date-fns": "^2.9.0",
     "filestack-react": "^3.1.0",
     "jwt-decode": "^2.2.0",
     "react": "^16.8.6",
