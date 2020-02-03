@@ -173,14 +173,24 @@ class Calendar extends Component {
         {this.renderHeader()}
         {this.renderDays()}
         {this.renderCells()}
-        <div>
-          <h2>
-            Tasks Due For{" "}
-            {`${this.state.selectedDate.getMonth() +
-              1}/${this.state.selectedDate.getDate()}/${this.state.selectedDate.getFullYear()}`}
-          </h2>
-          {tasksForDay}
-        </div>
+        {tasksForDay.length ? (
+          <div>
+            <h2>
+              Tasks Due For{" "}
+              {`${this.state.selectedDate.getMonth() +
+                1}/${this.state.selectedDate.getDate()}/${this.state.selectedDate.getFullYear()}`}
+            </h2>
+            {tasksForDay}
+          </div>
+        ) : (
+          <div>
+            <h2>
+              No Tasks Due For{" "}
+              {`${this.state.selectedDate.getMonth() +
+                1}/${this.state.selectedDate.getDate()}/${this.state.selectedDate.getFullYear()}`}
+            </h2>
+          </div>
+        )}
       </div>
     );
   }
