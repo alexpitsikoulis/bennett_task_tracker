@@ -33,11 +33,16 @@ function deleteAllFiles() {
   return FileCollection.deleteMany();
 }
 
+function deleteAllFilesForTask(taskId) {
+  return FileCollection.deleteMany({ taskId: taskId });
+}
+
 module.exports = {
   getAllFiles,
   getFilesByTaskId,
   getFileById,
   createFile,
   deleteFile,
-  deleteAllFiles
+  deleteAllFiles,
+  deleteAllFilesForTask
 };
