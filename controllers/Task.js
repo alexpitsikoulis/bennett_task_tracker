@@ -53,11 +53,10 @@ taskRouter.put("/:taskId", (req, res) => {
 
 taskRouter.delete("/:taskId", (req, res) => {
   taskApi.deleteTask(req.params.taskId).then(data => {
-    console.log(req.params.taskId);
     fileApi
       .deleteAllFilesForTask(req.params.taskId)
-      .then(data2 => {
-        res.json(data2);
+      .then(() => {
+        res.json(data);
       })
       .catch(err => {
         res.json(err);
