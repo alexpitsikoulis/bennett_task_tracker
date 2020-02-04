@@ -1,5 +1,6 @@
 const express = require("express");
 const taskApi = require("../models/Task");
+const fileApi = require("../models/File");
 const taskRouter = express.Router({ mergeParams: true });
 
 taskRouter.get("/", (req, res) => {
@@ -51,14 +52,17 @@ taskRouter.put("/:taskId", (req, res) => {
 });
 
 taskRouter.delete("/:taskId", (req, res) => {
-  taskApi
-    .deleteTask(req.params.taskId)
-    .then(data => {
-      res.json(data);
-    })
-    .catch(err => {
-      res.json(err);
-    });
+  taskApi.deleteTask(req.params.taskId).then(data => {
+    console.log(req.params.taskId);
+    fileApi
+      .deleteAllFilesForTask(req.params.taskId)
+      .then(data2 => {
+        res.json(data2);
+      })
+      .catch(err => {
+        res.json(err);
+      });
+  });
 });
 
 module.exports = {
