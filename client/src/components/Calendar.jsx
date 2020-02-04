@@ -91,9 +91,9 @@ class Calendar extends Component {
           .filter(task => {
             console.log(task.dueDate + "\n" + day);
             return (
-              new Date(task.dueDate).getMonth() == new Date(day).getMonth() &&
-              new Date(task.dueDate).getDate() == new Date(day).getDate() &&
-              new Date(task.dueDate).getFullYear() ==
+              new Date(task.dueDate).getMonth() === new Date(day).getMonth() &&
+              new Date(task.dueDate).getDate() === new Date(day).getDate() &&
+              new Date(task.dueDate).getFullYear() ===
                 new Date(day).getFullYear()
             );
           })
@@ -156,9 +156,9 @@ class Calendar extends Component {
       .filter(task => {
         const day = this.state.selectedDate;
         return (
-          new Date(task.dueDate).getMonth() == new Date(day).getMonth() &&
-          new Date(task.dueDate).getDate() == new Date(day).getDate() &&
-          new Date(task.dueDate).getFullYear() == new Date(day).getFullYear()
+          new Date(task.dueDate).getMonth() === new Date(day).getMonth() &&
+          new Date(task.dueDate).getDate() === new Date(day).getDate() &&
+          new Date(task.dueDate).getFullYear() === new Date(day).getFullYear()
         );
       })
       .map(task => (
