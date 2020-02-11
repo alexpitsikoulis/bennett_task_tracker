@@ -15,7 +15,7 @@ class TasksAssigned extends Component {
     this.getTasks();
   }
 
-  getTasks = loggedInId => {
+  getTasks = () => {
     axios
       .get(`/api/tasks/assignedBy/${this.props.auth.user.id}`)
       .then(res => {

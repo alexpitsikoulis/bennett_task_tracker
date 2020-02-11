@@ -1,5 +1,7 @@
 const express = require("express");
-const user = require("../models/User");
+const User = require("../models/User");
+const taskApi = require("../models/Task");
+const fileApi = require("../models/File");
 const userRouter = express.Router();
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
@@ -45,13 +47,22 @@ userRouter.put("/:userId", (req, res) => {
 });
 
 userRouter.delete("/:userId", (req, res) => {
-  User.findByIdAndDelete(req.params.userId)
-    .then(user => {
-      res.json(user);
-    })
-    .catch(err => {
-      res.json(err);
+  User.findByIdAndDelete(req.params.userId).then(user => {
+    taskApi.getAllTasksByUserId(user._id).then(tasks => {
+      tasks.forEach(task => {
+        fileApi.deleteAllFilesForTask(task._id).then(() => {
+          taskApi
+            .deleteAllTasksForUser(user._id)
+            .then(() => {
+              res.json(user);
+            })
+            .catch(err => {
+              res.json(err);
+            });
+        });
+      });
     });
+  });
 });
 
 userRouter.post("/register", (req, res) => {

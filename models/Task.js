@@ -48,6 +48,10 @@ function deleteAllTasks() {
   return TaskCollection.deleteMany();
 }
 
+function deleteAllTasksForUser(userId) {
+  return TaskCollection.deleteMany({ userId });
+}
+
 module.exports = {
   getAllTasks,
   getAllTasksByUserId,
@@ -56,5 +60,6 @@ module.exports = {
   createTask,
   editTask,
   deleteTask,
-  deleteAllTasks
+  deleteAllTasks,
+  deleteAllTasksForUser
 };
