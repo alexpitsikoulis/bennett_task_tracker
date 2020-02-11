@@ -40,7 +40,7 @@ app.get("/*", (req, res) => {
 
 const PORT = process.env.PORT || 3001;
 
-schedule.scheduleJob("0 8 * * *", () => {
+schedule.scheduleJob("0 10 * * *", () => {
   axios.get(`http://localhost:${PORT}/api/tasks`).then(tasks => {
     const unfinishedTasksDueToday = tasks.data.filter(task => {
       const year = new Date(task.dueDate).getFullYear();

@@ -89,7 +89,6 @@ class Calendar extends Component {
         const cloneDay = day;
         const tasksForDay = this.state.tasks
           .filter(task => {
-            console.log(task.dueDate + "\n" + day);
             return (
               new Date(task.dueDate).getMonth() === new Date(day).getMonth() &&
               new Date(task.dueDate).getDate() === new Date(day).getDate() &&
