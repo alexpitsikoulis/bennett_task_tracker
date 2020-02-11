@@ -1,3 +1,5 @@
+const axios = require("axios");
+
 axios.get(`http://bennett-task-tracker.herokuapp.com/api/tasks`).then(tasks => {
   const unfinishedTasksDueToday = tasks.data.filter(task => {
     const year = new Date(task.dueDate).getFullYear();
@@ -18,7 +20,7 @@ axios.get(`http://bennett-task-tracker.herokuapp.com/api/tasks`).then(tasks => {
     const email = task.userEmail;
     const message = `Your task ${task.title} is due today and has not yet been marked completed.`;
     axios
-      .post(`http://localhost:${PORT}/send`, {
+      .post(`http://bennett-task-tracker.herokuapp.com/send`, {
         subject,
         email,
         message
