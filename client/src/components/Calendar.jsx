@@ -167,6 +167,9 @@ class Calendar extends Component {
           </Link>
         </li>
       ));
+
+    const selectedDate = `${this.state.selectedDate.getMonth() +
+      1}/${this.state.selectedDate.getDate()}/${this.state.selectedDate.getFullYear()}`;
     return (
       <div className="calendar">
         {this.renderHeader()}
@@ -174,20 +177,12 @@ class Calendar extends Component {
         {this.renderCells()}
         {tasksForDay.length ? (
           <div>
-            <h2>
-              Tasks Due For{" "}
-              {`${this.state.selectedDate.getMonth() +
-                1}/${this.state.selectedDate.getDate()}/${this.state.selectedDate.getFullYear()}`}
-            </h2>
+            <h2>Tasks Due For {selectedDate}</h2>
             {tasksForDay}
           </div>
         ) : (
           <div>
-            <h2>
-              No Tasks Due For{" "}
-              {`${this.state.selectedDate.getMonth() +
-                1}/${this.state.selectedDate.getDate()}/${this.state.selectedDate.getFullYear()}`}
-            </h2>
+            <h2>No Tasks Due For {selectedDate}</h2>
           </div>
         )}
       </div>
