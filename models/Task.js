@@ -11,7 +11,8 @@ const TaskSchema = new mongoose.Schema({
   dateTimeStarted: Date,
   dueDate: Date,
   assignedBy: String,
-  assignedById: mongoose.Types.ObjectId
+  assignedById: mongoose.Types.ObjectId,
+  dateCompleted: Date
 });
 
 const TaskCollection = mongoose.model("Task", TaskSchema);
